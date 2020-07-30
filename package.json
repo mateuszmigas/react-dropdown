@@ -1,0 +1,25 @@
+{
+  "name": "@mateuszmigas/dropdown",
+  "version": "0.0.1",
+  "description": "Generic react dropdown",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mateuszmigas/dropdown.git"
+  },
+  "author": "Mateusz Migas",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mateuszmigas/dropdown/issues"
+  },
+  "homepage": "https://github.com/mateuszmigas/dropdown#readme",
+  "devDependencies": {
+    "typescript": "^3.9.7"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
