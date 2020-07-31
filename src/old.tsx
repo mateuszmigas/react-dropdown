@@ -1,4 +1,5 @@
 import React from "react";
+import { assignDefinedOnly, filterNotPropControlled } from "./helpers";
 
 export type RemoteCallback<T> = (
   offset: number,
@@ -131,18 +132,6 @@ export const DropdownButton = <T,>(props: {
   );
 };
 
-function assignDefinedOnly(target: any, ...sources: any[]) {
-  for (const source of sources) {
-    for (const key of Object.keys(source)) {
-      const val = source[key];
-      if (val !== undefined) {
-        target[key] = val;
-      }
-    }
-  }
-  return target;
-}
-
 export type DropdownControlledProps = {
   isOpen?: boolean;
   onIsOpenChange?: (isOpen: boolean) => void;
@@ -168,19 +157,6 @@ export type DropdownState = Partial<DropdownControlledProps> & {};
 
 export const isEmptyObject = (obj: Object) => {
   return Object.keys(obj).length === 0;
-};
-
-export const filterNotPropControlled = <P extends object, S extends object>(
-  props: P,
-  state: S
-): S => {
-  const isPropControlled = (key: PropertyKey) => props.hasOwnProperty(key);
-  return Object.keys(state)
-    .filter((key: PropertyKey) => !isPropControlled(key))
-    .reduce((accumulator, key: PropertyKey) => {
-      (Object as any).assign(accumulator, { [key]: state[key as keyof S] });
-      return accumulator;
-    }, {} as S);
 };
 
 export const search = <T,>(
@@ -275,7 +251,7 @@ export class Dropdown extends React.PureComponent<
         //this.element2.current.scrollTo(0, oldState.highlightedIndex * 50 + 50);
         return {
           ...oldState,
-          highlightedIndex: Math.max(oldState?.highlightedIndex ?? 1 - 1, 0),
+          highlightedIndex: Math.max((oldState.highlightedIndex ?? 1) - 1, 0),
         };
       }
       case "HighlightNextIndex": {

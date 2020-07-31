@@ -7,9 +7,14 @@ export type DropdownActions =
       type: "SelectIndexes";
       payload: { indexes: number[] };
     }
+  | { type: "ClearSelection" }
   | {
       type: "OpenList";
     }
   | {
       type: "CloseList";
-    };
+    }
+  | { type: "HighlightPreviousIndex" }
+  | { type: "HighlightNextIndex" }
+  | { type: "SelectHighlightedIndex" }
+  | { type: "Mouse_ClickOutside" };
