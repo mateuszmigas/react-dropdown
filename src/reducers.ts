@@ -1,6 +1,18 @@
 import { DropdownState, DropdownProps } from ".";
 import { DropdownActions } from "./actions";
 
+const clamp = (value: number, min: number, max: number) => {
+  if (value < min) return min;
+  else if (value > max) return max;
+  else return value;
+};
+
+const increaseIndex = (
+  current: number | null | undefined,
+  total: number,
+  offset: number
+) => (total > 0 ? clamp((current ?? 0) + offset, 0, total - 1) : null);
+
 export const reducer = (
   state: DropdownState,
   props: DropdownProps,
@@ -20,22 +32,22 @@ export const reducer = (
       };
     }
     case "HighlightPreviousIndex": {
-      //this.element2.current.scrollTo(0, oldState.highlightedIndex * 50 + 50);
       return {
         ...state,
-        highlightedIndex: Math.max((state.highlightedIndex ?? 1) - 1, 0),
+        highlightedIndex: increaseIndex(
+          state.highlightedIndex,
+          props.itemsCount,
+          -1
+        ),
       };
     }
     case "HighlightNextIndex": {
-      // (this.hostElement
-      //   .current as any).getScrollableNode().children[0].scrollTop = 0;
-
-      //this.element2.current.scrollTo(0, oldState.highlightedIndex * 50);
       return {
         ...state,
-        highlightedIndex: Math.min(
-          state?.highlightedIndex ?? 0 + 1,
-          props.itemsCount
+        highlightedIndex: increaseIndex(
+          state.highlightedIndex,
+          props.itemsCount,
+          1
         ),
       };
     }
@@ -43,6 +55,7 @@ export const reducer = (
       return {
         ...state,
         selectedIndexes: [action.payload.index],
+        highlightedIndex: action.payload.index,
       };
     }
     case "SelectHighlightedIndex": {

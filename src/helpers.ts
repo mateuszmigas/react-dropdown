@@ -22,3 +22,17 @@ export const filterNotPropControlled = <P extends object, S extends object>(
       return accumulator;
     }, {} as S);
 };
+
+export const getChanges = <T>(old: Partial<T>, newO: Partial<T>) => {
+  return [...Object.keys(old), ...Object.keys(newO)].reduce(
+    (accumulator, objectKey: PropertyKey) => {
+      const key = objectKey as keyof T;
+
+      if (old[key] !== newO[key]) {
+        accumulator[key] = newO[key];
+      }
+      return accumulator;
+    },
+    {} as Partial<T>
+  );
+};

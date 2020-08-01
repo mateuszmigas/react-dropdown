@@ -1,7 +1,12 @@
-import React from "react";
-import { assignDefinedOnly, filterNotPropControlled } from "./helpers";
+import {
+  assignDefinedOnly,
+  filterNotPropControlled,
+  getChanges,
+} from "./helpers";
 import { DropdownActions } from "./actions";
 import { reducer as dropdownStateReducer } from "./reducers";
+import React from "react";
+//import "styles.css";
 
 export const DropdownButton = <T,>(props: {
   options: T[];
@@ -16,7 +21,7 @@ export const DropdownButton = <T,>(props: {
         style={{ flex: 1 }}
         onClick={() => props.onIsOpenChange(!props.isOpen)}
       >
-        {props.selectedIndexes !== null
+        {props.selectedIndexes?.length > 0
           ? props.options[props.selectedIndexes[0]]
           : ""}
       </button>
@@ -25,40 +30,102 @@ export const DropdownButton = <T,>(props: {
   );
 };
 
+export const DropdownList = <T,>(props: {
+  options: T[];
+  selectedIndexes: number[];
+  highlightedIndex: number | null;
+  onSelectedIndexesChange: (indexes: number[]) => void;
+  dispatch: DropdownDispatch;
+  ref2: any;
+}) => {
+  const [search, setSearch] = React.useState("");
+  return (
+    <div ref={props.ref2} className="dropdown-list">
+      <div style={{ width: "275px" }}>
+        <input
+          style={{ width: "100%" }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        ></input>
+      </div>
+      {props.options
+        .filter(
+          (o) =>
+            search === "" ||
+            (o as any)
+              .toString()
+              .toLocaleLowerCase()
+              .includes(search.toLocaleLowerCase())
+        )
+        .map((o, i) => (
+          <div
+            style={{
+              backgroundColor:
+                props.highlightedIndex === i ? "#bde4ff" : "white",
+              color: props.selectedIndexes?.[0] === i ? "blue" : "black",
+              minHeight: "50px",
+            }}
+            key={i}
+            onClick={() => {
+              console.log("selecting", i);
+
+              props.onSelectedIndexesChange([i]);
+            }}
+          >
+            {o}
+          </div>
+        ))}
+    </div>
+  );
+};
+
 export const SimpleTextDropdown = (props: { title: string }) => {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
+    2
+  );
+
   const options = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const render = React.useCallback(
+    (renderProps: DropdownRenderProps) => (
+      <div {...renderProps.getWrapperProps()} className="dropdown">
+        <DropdownButton {...renderProps} options={options}></DropdownButton>
+        {renderProps.isOpen && (
+          <DropdownList
+            {...renderProps}
+            ref2={renderProps.ref2}
+            options={options}
+            onSelectedIndexesChange={(index) => {
+              renderProps.onSelectedIndexesChange(index);
+              //renderProps.selectIndexes();
+              renderProps.onIsOpenChange(false);
+            }}
+          ></DropdownList>
+        )}
+      </div>
+    ),
+    []
+  );
+
+  const onState = React.useCallback(
+    (changes: Partial<DropdownControlledProps>) => {
+      if (changes.highlightedIndex !== undefined) {
+        setHighlightedIndex(changes.highlightedIndex);
+      }
+    },
+    []
+  );
 
   return (
     <div>
+      <div>before2</div>
       <Dropdown
-        // isOpen={isOpen}
-        //onIsOpenChange={setIsOpen}
-        selectedIndexes={[2]}
-        highlightedIndex={2}
+        highlightedIndex={highlightedIndex}
         itemsCount={options.length}
-        renderer={(renderProps) => (
-          <div {...renderProps.getWrapperProps()} className="dropdown">
-            <DropdownButton {...renderProps} options={options}></DropdownButton>
-            {/* {renderProps.isOpen && (
-            <DropdownList
-              keyboard
-              navigator
-              handle
-              outside
-              click
-              {...renderProps}
-              ref2={renderProps.ref2}
-              options={options}
-              onSelectedIndexChange={(index) => {
-                renderProps.onSelectedIndexChange(index);
-                renderProps.selectIndex();
-                renderProps.onIsOpenChange(false);
-              }}
-            ></DropdownList> */}
-          </div>
-        )}
+        onStateChange={onState}
+        renderer={render}
       ></Dropdown>
+      <div>after</div>
     </div>
   );
 };
@@ -97,10 +164,14 @@ export type DropdownControlledProps = {
 
 export type DropdownProps = DropdownControlledProps & {
   itemsCount: number;
-  renderer: (renderProps: RenderProps) => JSX.Element;
+  onStateChange?: (changes: Partial<DropdownControlledProps>) => void;
+  renderer: (renderProps: DropdownRenderProps) => JSX.Element;
 };
 
-export type RenderProps = Required<DropdownControlledProps> & {
+export type DropdownDispatch = (action: DropdownActions) => void;
+
+export type DropdownRenderProps = Required<DropdownControlledProps> & {
+  dispatch: DropdownDispatch;
   getWrapperProps: () => {
     ref: React.RefObject<HTMLDivElement>;
   };
@@ -136,6 +207,8 @@ export class Dropdown extends React.PureComponent<
     this.setState((state) => {
       const mergedState = this.getInternalState(state);
       const newState = dropdownStateReducer(mergedState, this.props, action);
+
+      this.props.onStateChange?.(getChanges(state, newState));
       console.log("reducing", { oldState: state, newState, action });
 
       //reduce full state with user reducer
@@ -223,6 +296,7 @@ export class Dropdown extends React.PureComponent<
       onIsOpenChange: this.setIsOpen,
       onSelectedIndexesChange: this.selectIndex,
       getWrapperProps: this.getWrapperProps,
+      dispatch: this.dispatchInternal,
       ref2: this.element2,
     });
   }
