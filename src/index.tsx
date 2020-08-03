@@ -12,20 +12,25 @@ export const DropdownButton = <T,>(props: {
   options: T[];
   isOpen: boolean;
   selectedIndexes: number[];
-  onSelectedIndexesChange: (index: number[]) => void;
-  onIsOpenChange: (value: boolean) => void;
+  dispatch: DropdownDispatch;
 }) => {
   return (
     <div className="dropdown-button">
       <button
         style={{ flex: 1 }}
-        onClick={() => props.onIsOpenChange(!props.isOpen)}
+        onClick={() =>
+          props.dispatch(
+            !props.isOpen ? [{ type: "OpenList" }] : [{ type: "CloseList" }]
+          )
+        }
       >
         {props.selectedIndexes?.length > 0
           ? props.options[props.selectedIndexes[0]]
           : ""}
       </button>
-      <button onClick={() => props.onSelectedIndexesChange([])}>X</button>
+      <button onClick={() => props.dispatch([{ type: "ClearSelection" }])}>
+        X
+      </button>
     </div>
   );
 };
@@ -34,7 +39,6 @@ export const DropdownList = <T,>(props: {
   options: T[];
   selectedIndexes: number[];
   highlightedIndex: number | null;
-  onSelectedIndexesChange: (indexes: number[]) => void;
   dispatch: DropdownDispatch;
   ref2: any;
 }) => {
@@ -67,9 +71,10 @@ export const DropdownList = <T,>(props: {
             }}
             key={i}
             onClick={() => {
-              console.log("selecting", i);
-
-              props.onSelectedIndexesChange([i]);
+              props.dispatch([
+                { type: "SelectIndex", payload: { index: i } },
+                { type: "CloseList" },
+              ]);
             }}
           >
             {o}
@@ -80,10 +85,15 @@ export const DropdownList = <T,>(props: {
 };
 
 export const SimpleTextDropdown = (props: { title: string }) => {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(true);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
     2
   );
+  //const mainRef = React.useRef();
+  //const useDropdown =
+  //const { xx} = useDropdownState()
+  //useKeyboadNavigator(ref, mapping)
+  //useClickOutsideHandler(ref, )
 
   const options = ["A", "B", "C", "D", "E", "F", "G", "H"];
   const render = React.useCallback(
@@ -95,11 +105,6 @@ export const SimpleTextDropdown = (props: { title: string }) => {
             {...renderProps}
             ref2={renderProps.ref2}
             options={options}
-            onSelectedIndexesChange={(index) => {
-              renderProps.onSelectedIndexesChange(index);
-              //renderProps.selectIndexes();
-              renderProps.onIsOpenChange(false);
-            }}
           ></DropdownList>
         )}
       </div>
@@ -112,6 +117,9 @@ export const SimpleTextDropdown = (props: { title: string }) => {
       if (changes.highlightedIndex !== undefined) {
         setHighlightedIndex(changes.highlightedIndex);
       }
+      if (changes.isOpen !== undefined) {
+        setIsOpen(changes.isOpen);
+      }
     },
     []
   );
@@ -120,6 +128,7 @@ export const SimpleTextDropdown = (props: { title: string }) => {
     <div>
       <div>before2</div>
       <Dropdown
+        isOpen={isOpen}
         highlightedIndex={highlightedIndex}
         itemsCount={options.length}
         onStateChange={onState}
@@ -154,12 +163,8 @@ export const InputHandler = (event: {
 
 export type DropdownControlledProps = {
   isOpen?: boolean;
-  onIsOpenChange?: (isOpen: boolean) => void;
   selectedIndexes?: number[];
-  onSelectedIndexesChange?: (indexes: number[]) => void;
   highlightedIndex?: number | null;
-  onHighlightedIndexChange?: (index: number) => void;
-  //dispatch: (action: DropdownActions) => void;
 };
 
 export type DropdownProps = DropdownControlledProps & {
@@ -168,7 +173,7 @@ export type DropdownProps = DropdownControlledProps & {
   renderer: (renderProps: DropdownRenderProps) => JSX.Element;
 };
 
-export type DropdownDispatch = (action: DropdownActions) => void;
+export type DropdownDispatch = (actions: DropdownActions[]) => void;
 
 export type DropdownRenderProps = Required<DropdownControlledProps> & {
   dispatch: DropdownDispatch;
@@ -183,6 +188,47 @@ export type DropdownState = Partial<DropdownControlledProps> & {};
 export const isEmptyObject = (obj: Object) => {
   return Object.keys(obj).length === 0;
 };
+
+export const useDropdownState = <T,>(
+  itemsCount: number,
+  controlledProps: DropdownControlledProps,
+  onStateChange?: (changes: Partial<DropdownControlledProps>) => void
+): [DropdownState, DropdownDispatch] => {
+  const [state, setState] = React.useState<DropdownState>({
+    highlightedIndex: itemsCount > 0 ? 0 : null,
+  });
+
+  const dispatchActions = React.useCallback(
+    (actions: DropdownActions[]) => {
+      console.log("im here");
+
+      setState((state) => {
+        const mergedState = assignDefinedOnly(state, controlledProps);
+        const newState = actions.reduce(
+          (stateAccumulator, action) =>
+            dropdownStateReducer(stateAccumulator, itemsCount, action),
+          { ...mergedState }
+        );
+
+        onStateChange?.(getChanges(state, newState));
+        console.log("reducing", { oldState: state, newState, actions });
+        const filteredState = filterNotPropControlled(
+          controlledProps,
+          newState
+        );
+        return filteredState;
+      });
+    },
+    [
+      controlledProps.highlightedIndex,
+      controlledProps.isOpen,
+      controlledProps.selectedIndexes,
+    ]
+  );
+
+  return [{ ...state }, dispatchActions];
+};
+
 export class Dropdown extends React.PureComponent<
   DropdownProps,
   DropdownState
@@ -203,13 +249,19 @@ export class Dropdown extends React.PureComponent<
     return assignDefinedOnly(state, this.props);
   };
 
-  private dispatchInternal = (action: DropdownActions) => {
+  private dispatchActions = (actions: DropdownActions[]) => {
+    console.log("im here");
+
     this.setState((state) => {
       const mergedState = this.getInternalState(state);
-      const newState = dropdownStateReducer(mergedState, this.props, action);
+      const newState = actions.reduce(
+        (stateAccumulator, action) =>
+          dropdownStateReducer(stateAccumulator, this.props.itemsCount, action),
+        { ...mergedState }
+      );
 
       this.props.onStateChange?.(getChanges(state, newState));
-      console.log("reducing", { oldState: state, newState, action });
+      console.log("reducing", { oldState: state, newState, actions });
 
       //reduce full state with user reducer
       //return partial state
@@ -241,9 +293,11 @@ export class Dropdown extends React.PureComponent<
       this.hostElement.current &&
       !this.hostElement.current.contains(e.target as Node)
     ) {
-      this.dispatchInternal({
-        type: "CloseList",
-      });
+      this.dispatchActions([
+        {
+          type: "CloseList",
+        },
+      ]);
     }
   };
 
@@ -251,36 +305,30 @@ export class Dropdown extends React.PureComponent<
     console.log(e.keyCode);
     if (e.keyCode === 40) {
       //up
-      this.dispatchInternal({ type: "HighlightNextIndex" });
+      this.dispatchActions([{ type: "HighlightNextIndex" }]);
     }
     if (e.keyCode === 38) {
       //down
-      this.dispatchInternal({ type: "HighlightPreviousIndex" });
+      this.dispatchActions([{ type: "HighlightPreviousIndex" }]);
     }
     if (e.keyCode == 13) {
       //enter
-      this.dispatchInternal({
-        type: "SelectHighlightedIndex",
-      });
+      this.dispatchActions([
+        {
+          type: "SelectHighlightedIndex",
+        },
+      ]);
     }
 
     if (e.keyCode == 27) {
       //esc
-      this.dispatchInternal({
-        type: "CloseList",
-      });
+      this.dispatchActions([
+        {
+          type: "CloseList",
+        },
+      ]);
     }
   };
-
-  private setIsOpen = (isOpen: boolean) => {
-    this.dispatchInternal({ type: isOpen ? "OpenList" : "CloseList" });
-  };
-
-  private selectIndex = (index: number) =>
-    this.dispatchInternal({
-      type: "SelectIndex",
-      payload: { index },
-    });
 
   private getWrapperProps = () => {
     return {
@@ -293,10 +341,8 @@ export class Dropdown extends React.PureComponent<
 
     return this.props.renderer({
       ...assignDefinedOnly(this.state, this.props),
-      onIsOpenChange: this.setIsOpen,
-      onSelectedIndexesChange: this.selectIndex,
       getWrapperProps: this.getWrapperProps,
-      dispatch: this.dispatchInternal,
+      dispatch: this.dispatchActions,
       ref2: this.element2,
     });
   }

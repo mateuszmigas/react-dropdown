@@ -1,4 +1,4 @@
-import { DropdownState, DropdownProps } from ".";
+import { DropdownState, DropdownProps, DropdownControlledProps } from ".";
 import { DropdownActions } from "./actions";
 
 const clamp = (value: number, min: number, max: number) => {
@@ -15,7 +15,7 @@ const increaseIndex = (
 
 export const reducer = (
   state: DropdownState,
-  props: DropdownProps,
+  itemsCount: number,
   action: DropdownActions
 ): DropdownState => {
   switch (action.type) {
@@ -34,21 +34,13 @@ export const reducer = (
     case "HighlightPreviousIndex": {
       return {
         ...state,
-        highlightedIndex: increaseIndex(
-          state.highlightedIndex,
-          props.itemsCount,
-          -1
-        ),
+        highlightedIndex: increaseIndex(state.highlightedIndex, itemsCount, -1),
       };
     }
     case "HighlightNextIndex": {
       return {
         ...state,
-        highlightedIndex: increaseIndex(
-          state.highlightedIndex,
-          props.itemsCount,
-          1
-        ),
+        highlightedIndex: increaseIndex(state.highlightedIndex, itemsCount, 1),
       };
     }
     case "SelectIndex": {
@@ -61,9 +53,11 @@ export const reducer = (
     case "SelectHighlightedIndex": {
       return {
         ...state,
-        selectedIndexes: !!state.highlightedIndex
-          ? [state.highlightedIndex]
-          : [],
+        selectedIndexes:
+          state.highlightedIndex !== null &&
+          state.highlightedIndex !== undefined
+            ? [state.highlightedIndex]
+            : [],
       };
     }
     case "ClearSelection": {
