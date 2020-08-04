@@ -1,3 +1,4 @@
+import { DropdownDispatch } from "./index";
 import { DropdownState, DropdownProps, DropdownControlledProps } from ".";
 import { DropdownActions } from "./actions";
 
@@ -5,6 +6,37 @@ const clamp = (value: number, min: number, max: number) => {
   if (value < min) return min;
   else if (value > max) return max;
   else return value;
+};
+
+export const keyboarDispatcher = (dispatch: DropdownDispatch) => (
+  e: KeyboardEvent
+) => {
+  console.log(e.keyCode);
+  if (e.keyCode === 40) {
+    //up
+    dispatch([{ type: "HighlightNextIndex" }]);
+  }
+  if (e.keyCode === 38) {
+    //down
+    dispatch([{ type: "HighlightPreviousIndex" }]);
+  }
+  if (e.keyCode == 13) {
+    //enter
+    dispatch([
+      {
+        type: "SelectHighlightedIndex",
+      },
+    ]);
+  }
+
+  if (e.keyCode == 27) {
+    //esc
+    dispatch([
+      {
+        type: "CloseList",
+      },
+    ]);
+  }
 };
 
 const increaseIndex = (
@@ -54,8 +86,7 @@ export const reducer = (
       return {
         ...state,
         selectedIndexes:
-          state.highlightedIndex !== null &&
-          state.highlightedIndex !== undefined
+          state.highlightedIndex != null && state.highlightedIndex != undefined
             ? [state.highlightedIndex]
             : [],
       };
@@ -64,6 +95,7 @@ export const reducer = (
       return {
         ...state,
         selectedIndexes: [],
+        highlightedIndex: itemsCount > 0 ? 0 : null,
       };
     }
     default:

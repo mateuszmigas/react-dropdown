@@ -4,8 +4,10 @@ import {
   getChanges,
 } from "./helpers";
 import { DropdownActions } from "./actions";
-import { reducer as dropdownStateReducer } from "./reducers";
+import { reducer as dropdownStateReducer, keyboarDispatcher } from "./reducers";
 import React from "react";
+import { FixedSizeList } from "react-window";
+
 //import "styles.css";
 
 export const DropdownButton = <T,>(props: {
@@ -35,16 +37,25 @@ export const DropdownButton = <T,>(props: {
   );
 };
 
+const Row = ({ index, style }: any) => (
+  <div className={index % 2 ? "ListItemOdd" : "ListItemEven"} style={style}>
+    Row {index}
+  </div>
+);
 export const DropdownList = <T,>(props: {
   options: T[];
   selectedIndexes: number[];
   highlightedIndex: number | null;
   dispatch: DropdownDispatch;
-  ref2: any;
 }) => {
   const [search, setSearch] = React.useState("");
+  console.log("rendering list", {
+    indexes: props.selectedIndexes,
+    highli: props.highlightedIndex,
+  });
+
   return (
-    <div ref={props.ref2} className="dropdown-list">
+    <div className="dropdown-list">
       <div style={{ width: "275px" }}>
         <input
           style={{ width: "100%" }}
@@ -52,6 +63,15 @@ export const DropdownList = <T,>(props: {
           onChange={(e) => setSearch(e.target.value)}
         ></input>
       </div>
+      {/* <FixedSizeList
+        className="List"
+        height={200}
+        itemCount={1000}
+        itemSize={35}
+        width={500}
+      >
+        {Row}
+      </FixedSizeList> */}
       {props.options
         .filter(
           (o) =>
@@ -84,6 +104,54 @@ export const DropdownList = <T,>(props: {
   );
 };
 
+// function useKeyPress(targetKey) {
+//   // State for keeping track of whether key is pressed
+//   const [keyPressed, setKeyPressed] = useState(false);
+
+//   // If pressed key is our target key then set to true
+//   function downHandler({ key }) {
+//     if (key === targetKey) {
+//       setKeyPressed(true);
+//     }
+//   }
+
+//   // If released key is our target key then set to false
+//   const upHandler = ({ key }) => {
+//     if (key === targetKey) {
+//       setKeyPressed(false);
+//     }
+//   };
+
+//   // Add event listeners
+//   useEffect(() => {
+//     window.addEventListener('keydown', downHandler);
+//     window.addEventListener('keyup', upHandler);
+//     // Remove event listeners on cleanup
+//     return () => {
+//       window.removeEventListener('keydown', downHandler);
+//       window.removeEventListener('keyup', upHandler);
+//     };
+//   }, []); // Empty array ensures that effect is only run on mount and unmount
+
+//   return keyPressed;
+// }
+
+export const useKeyPressListener = (
+  element: React.RefObject<HTMLElement>,
+  handler: (e: KeyboardEvent) => void
+) => {
+  React.useEffect(() => {
+    function keyboardHandler(e: KeyboardEvent) {
+      handler(e);
+    }
+    element?.current?.addEventListener("keyup", keyboardHandler);
+
+    return () => {
+      element?.current?.removeEventListener("keyup", keyboardHandler);
+    };
+  }, [element, handler]);
+};
+
 export const SimpleTextDropdown = (props: { title: string }) => {
   const [isOpen, setIsOpen] = React.useState(true);
   const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
@@ -94,23 +162,7 @@ export const SimpleTextDropdown = (props: { title: string }) => {
   //const { xx} = useDropdownState()
   //useKeyboadNavigator(ref, mapping)
   //useClickOutsideHandler(ref, )
-
-  const options = ["A", "B", "C", "D", "E", "F", "G", "H"];
-  const render = React.useCallback(
-    (renderProps: DropdownRenderProps) => (
-      <div {...renderProps.getWrapperProps()} className="dropdown">
-        <DropdownButton {...renderProps} options={options}></DropdownButton>
-        {renderProps.isOpen && (
-          <DropdownList
-            {...renderProps}
-            ref2={renderProps.ref2}
-            options={options}
-          ></DropdownList>
-        )}
-      </div>
-    ),
-    []
-  );
+  const dropdownRef = React.useRef(null);
 
   const onState = React.useCallback(
     (changes: Partial<DropdownControlledProps>) => {
@@ -124,16 +176,46 @@ export const SimpleTextDropdown = (props: { title: string }) => {
     []
   );
 
+  const options = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  const [renderProps, dispachtStat] = useDropdownState(
+    options.length,
+    {
+      isOpen,
+    },
+    onState
+  );
+
+  const keyboardDisdpatcher = React.useRef(keyboarDispatcher(dispachtStat));
+  useKeyPressListener(dropdownRef, keyboardDisdpatcher.current);
+
+  //renderProps.
+
   return (
     <div>
       <div>before2</div>
-      <Dropdown
+      <div ref={dropdownRef} className="dropdown">
+        <DropdownButton
+          {...renderProps}
+          dispatch={dispachtStat}
+          isOpen={isOpen}
+          options={options}
+        ></DropdownButton>
+        {isOpen && (
+          <DropdownList
+            {...renderProps}
+            highlightedIndex={renderProps.highlightedIndex}
+            dispatch={dispachtStat}
+            options={options}
+          ></DropdownList>
+        )}
+      </div>
+      {/* <Dropdown
         isOpen={isOpen}
         highlightedIndex={highlightedIndex}
         itemsCount={options.length}
         onStateChange={onState}
         renderer={render}
-      ></Dropdown>
+      ></Dropdown> */}
       <div>after</div>
     </div>
   );
@@ -162,9 +244,9 @@ export const InputHandler = (event: {
 };
 
 export type DropdownControlledProps = {
-  isOpen?: boolean;
-  selectedIndexes?: number[];
-  highlightedIndex?: number | null;
+  isOpen: boolean;
+  selectedIndexes: number[];
+  highlightedIndex: number | null;
 };
 
 export type DropdownProps = DropdownControlledProps & {
@@ -189,19 +271,19 @@ export const isEmptyObject = (obj: Object) => {
   return Object.keys(obj).length === 0;
 };
 
-export const useDropdownState = <T,>(
+export const useDropdownState = <T extends Partial<DropdownControlledProps>>(
   itemsCount: number,
-  controlledProps: DropdownControlledProps,
+  controlledProps: T,
   onStateChange?: (changes: Partial<DropdownControlledProps>) => void
-): [DropdownState, DropdownDispatch] => {
-  const [state, setState] = React.useState<DropdownState>({
-    highlightedIndex: itemsCount > 0 ? 0 : null,
+): [Omit<DropdownControlledProps, keyof T>, DropdownDispatch] => {
+  const [state, setState] = React.useState<DropdownControlledProps>({
+    selectedIndexes: [],
+    highlightedIndex: 0,
+    isOpen: false,
   });
 
   const dispatchActions = React.useCallback(
     (actions: DropdownActions[]) => {
-      console.log("im here");
-
       setState((state) => {
         const mergedState = assignDefinedOnly(state, controlledProps);
         const newState = actions.reduce(
