@@ -121,12 +121,16 @@ export const SimpleTextDropdown = (props: { title: string }) => {
     options.length,
     {
       isOpen,
+      highlightedIndex,
     },
     onState
   );
 
-  const keyboardDisdpatcher = React.useRef(keyboarDispatcher(dispachtStat));
-  useKeyPressListener(dropdownRef, keyboardDisdpatcher.current);
+  const keyboardDisdpatcher = React.useMemo(
+    () => keyboarDispatcher(dispachtStat),
+    [dispachtStat]
+  );
+  useKeyPressListener(dropdownRef, keyboardDisdpatcher);
   useClickOutsideListener(dropdownRef, () => {
     dispachtStat(["CloseList"]);
   });
@@ -146,7 +150,7 @@ export const SimpleTextDropdown = (props: { title: string }) => {
         {isOpen && (
           <DropdownList
             {...dropdownState}
-            highlightedIndex={dropdownState.highlightedIndex}
+            highlightedIndex={highlightedIndex}
             dispatch={dispachtStat}
             options={options}
           ></DropdownList>
