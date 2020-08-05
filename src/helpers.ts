@@ -10,26 +10,22 @@ export function assignDefinedOnly(target: any, ...sources: any[]) {
   return target;
 }
 
-export const filterNotPropControlled = <P extends object, S extends object>(
-  props: P,
-  state: S
-): S => {
-  const isPropControlled = (key: PropertyKey) => props.hasOwnProperty(key);
-  return Object.keys(state)
-    .filter((key: PropertyKey) => !isPropControlled(key))
-    .reduce((accumulator, key: PropertyKey) => {
-      (Object as any).assign(accumulator, { [key]: state[key as keyof S] });
+export const omitKeys = <S extends object>(obj: S, keys: string[]): S => {
+  return Object.keys(obj)
+    .filter((key) => !keys.includes(key))
+    .reduce((accumulator, key: string) => {
+      Object.assign(accumulator, { [key]: obj[key as keyof S] });
       return accumulator;
     }, {} as S);
 };
 
-export const getChanges = <T>(old: Partial<T>, newO: Partial<T>) => {
-  return [...Object.keys(old), ...Object.keys(newO)].reduce(
+export const shallowDifference = <T>(obj1: Partial<T>, obj2: Partial<T>) => {
+  return [...Object.keys(obj1), ...Object.keys(obj2)].reduce(
     (accumulator, objectKey: PropertyKey) => {
       const key = objectKey as keyof T;
 
-      if (old[key] !== newO[key]) {
-        accumulator[key] = newO[key];
+      if (obj1[key] !== obj2[key]) {
+        accumulator[key] = obj2[key];
       }
       return accumulator;
     },
