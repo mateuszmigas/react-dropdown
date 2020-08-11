@@ -1,6 +1,5 @@
 import { DropdownActions } from "./actions";
-import { DropdownDispatch } from "./index";
-import { DropdownState } from ".";
+import { DropdownDispatch, DropdownState } from "./useDropdownState";
 
 const clamp = (value: number, min: number, max: number) => {
   if (value < min) return min;
@@ -43,6 +42,8 @@ export const reducer = (
   itemsCount: number,
   action: DropdownActions
 ): DropdownState => {
+  console.log("reducing");
+
   if (typeof action === "string") {
     switch (action) {
       case "CloseList":
@@ -112,6 +113,12 @@ export const reducer = (
         return {
           ...state,
           selectedIndexes: [action.index],
+          highlightedIndex: action.index,
+        };
+      }
+      case "HighlightIndex": {
+        return {
+          ...state,
           highlightedIndex: action.index,
         };
       }

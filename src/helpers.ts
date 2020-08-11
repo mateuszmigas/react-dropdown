@@ -1,16 +1,17 @@
-export function assignDefinedOnly(target: any, ...sources: any[]) {
+export function overlapDefinedProps(target: any, ...sources: any[]) {
+  let result: any = { ...target };
   for (const source of sources) {
     for (const key of Object.keys(source)) {
       const val = source[key];
       if (val !== undefined) {
-        target[key] = val;
+        result[key] = val;
       }
     }
   }
-  return target;
+  return result;
 }
 
-export const omitKeys = <S extends object>(obj: S, keys: string[]): S => {
+export const omitKeys = <S extends {}>(obj: S, keys: string[]): Partial<S> => {
   return Object.keys(obj)
     .filter((key) => !keys.includes(key))
     .reduce((accumulator, key: string) => {

@@ -6,6 +6,7 @@ export type DropdownActions =
   | "ClearSelection"
   | "OpenList"
   | "CloseList"
+  | { type: "HighlightIndex"; index: number }
   | "HighlightFirstIndex"
   | "HighlightPreviousIndex"
   | "HighlightNextIndex"
