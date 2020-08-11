@@ -1,12 +1,13 @@
 import React from "react";
 import { useKeyPressListener } from "./hooks";
-import { useControlledValues } from "./controlledState";
+import { useControlledState } from "./controlledState";
 import {
   DropdownDispatch,
   DropdownState,
   useDropdownState,
 } from "./useDropdownState";
-import { keyboarDispatcher } from "./reducers";
+import { keyboarDispatcher, reducer } from "./reducers";
+import { DropdownActions } from "./actions";
 
 //import "styles.css";
 
@@ -34,6 +35,8 @@ export function DropdownButton<T>(props: {
 }
 
 //DropdownButton.whyDidYouRender = true;
+
+type MyActions = "SelectFirstTwo" | DropdownActions;
 
 export const DropdownList = function DropdownList<T>(props: {
   options: T[];
@@ -79,7 +82,7 @@ export const DropdownList = function DropdownList<T>(props: {
             style={{
               backgroundColor:
                 props.highlightedIndex === i ? "#bde4ff" : "white",
-              color: props.selectedIndexes?.[0] === i ? "blue" : "black",
+              color: props.selectedIndexes.includes(i) ? "blue" : "black",
               minHeight: "50px",
             }}
             key={i}
@@ -115,13 +118,37 @@ function SimpleTextDropdownF() {
     // }
   }, []);
 
+  // const [fsef, aaaaa] = useControlledState(
+  //   { a: "1", b: "2" },
+  //   { a: "3", c: "5", f: 23 },
+  //   (state: { a: string; b: string; c: string }, action: any) => state
+  // );
+  //  fsef.
+
+  const customReducer = React.useCallback(
+    (state: DropdownState, itemCount: number, action: MyActions) => {
+      if (typeof action === "string" && action === "SelectFirstTwo") {
+        return {
+          ...state,
+          selectedIndexes: [0, 1],
+        };
+      }
+
+      return reducer(state, itemCount, action);
+    },
+    []
+  );
   const [dropdownState, dispachtStat] = useDropdownState(
     options.length,
     {
       highlightedIndex,
     },
-    onState
+
+    onState,
+    customReducer
   );
+
+  //dropdownState.
 
   const keyboardDisdpatcher = React.useMemo(
     () => keyboarDispatcher(dispachtStat),
@@ -135,6 +162,9 @@ function SimpleTextDropdownF() {
   return (
     <div>
       <div>before2</div>
+      <button onClick={() => dispachtStat(["SelectFirstTwo"])}>
+        Select first two
+      </button>
       <div ref={dropdownRef} className="dropdown">
         <DropdownButton
           {...dropdownState}

@@ -21,24 +21,44 @@ export type DropdownState = {
   highlightedIndex: number | null;
 };
 
+export type Partial2 = Partial<DropdownState>;
+
+const defaultReducer = <Actions>(
+  state: DropdownState,
+  itemCount: number,
+  action: Actions
+) =>
+  dropdownStateReducer(
+    state,
+    itemCount,
+    (action as unknown) as DropdownActions
+  );
+
 export const useDropdownState = <
-  ExternalDropdownState = Partial<DropdownState>,
-  InternalDropdownState = Omit<DropdownState, keyof ExternalDropdownState>
+  Actions = DropdownActions,
+  ExternalState = Partial<DropdownState>,
+  InternalState = Omit<DropdownState, keyof ExternalState>
 >(
   itemsCount: number,
-  externalState: ExternalDropdownState,
-  onStateChange?: (changes: Partial<DropdownState>) => void
-): [InternalDropdownState, DropdownDispatch] => {
-  const reducer = React.useCallback(
-    (state: DropdownState, action: DropdownActions) =>
-      dropdownStateReducer(state, itemsCount, action),
-    [itemsCount]
+  externalState: ExternalState,
+  onStateChange?: (changes: Partial<DropdownState>) => void,
+  reducer: (
+    state: DropdownState,
+    itemCount: number,
+    action: Actions
+  ) => DropdownState = defaultReducer
+): [InternalState, (actions: Actions[]) => void] => {
+  const stateReducer = React.useCallback(
+    (state: DropdownState, action: Actions) =>
+      reducer(state, itemsCount, action),
+    [itemsCount, reducer]
   );
 
   return useControlledState(
-    <InternalDropdownState>defaultInitialState,
+    defaultInitialState as InternalState,
     externalState,
-    reducer,
+    stateReducer,
     onStateChange
   );
 };
+//type Merge<T, U> = keyof (T | U) extends never ? T & U : never;

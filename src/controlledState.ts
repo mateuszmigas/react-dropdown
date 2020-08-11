@@ -2,17 +2,6 @@ import { DropdownActions } from "./actions";
 import React from "react";
 import { overlapDefinedProps, shallowDifference, omitKeys } from "./helpers";
 
-export const useControlledValues = <State>(state: State): State => {
-  const ref = React.useRef<State>(state);
-  Object.assign(ref.current, { ...state });
-  return ref.current as State;
-};
-export const useMergeState = <T>(initialState: T) =>
-  React.useReducer(
-    (state: T, newState: T) => ({ ...state, ...newState }),
-    initialState
-  );
-
 function areShallowEqual(object1: any, object2: any) {
   const keys1 = Object.keys(object1);
   const keys2 = Object.keys(object2);
@@ -30,22 +19,19 @@ function areShallowEqual(object1: any, object2: any) {
   return true;
 }
 
-//let prev: any = {};
-//Omit<State, keyof ExternalState>
+type Merge<T, U> = keyof (T | U) extends never ? T & U : never;
 
-//Omit<InternalState, keyof ExternalState>
 export const useControlledState = <
-  State extends {},
   Action,
-  ExternalState = Partial<State>,
-  InternalState = Omit<State, keyof ExternalState>
+  InternalState extends {},
+  ExternalState extends {},
+  State extends {}
 >(
   initialInternalState: InternalState,
   externalState: ExternalState,
   reducer: (state: State, action: Action) => State,
   onStateChange?: (changes: Partial<State>) => void
 ): [InternalState, (actions: Action[]) => void] => {
-  //todo
   const newLocal = omitKeys(
     initialInternalState,
     Object.keys(externalState)
@@ -58,7 +44,7 @@ export const useControlledState = <
   const internalStateRef = React.useRef<InternalState>(internalState);
 
   //same ref?
-  const dispatchActions = React.useCallback(
+  const dispatch = React.useCallback(
     (actions: Action[]) => {
       const oldState: State = overlapDefinedProps(
         internalStateRef.current,
@@ -91,5 +77,5 @@ export const useControlledState = <
     [...Object.values(externalState), reducer, onStateChange]
   );
 
-  return [internalState, dispatchActions];
+  return [internalState, dispatch];
 };
