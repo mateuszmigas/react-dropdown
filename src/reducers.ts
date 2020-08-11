@@ -42,7 +42,7 @@ export const reducer = (
   itemsCount: number,
   action: DropdownActions
 ): DropdownState => {
-  console.log("reducing");
+  //console.log("reducing");
 
   if (typeof action === "string") {
     switch (action) {

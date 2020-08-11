@@ -5,15 +5,16 @@ export const useKeyPressListener = (
   handler: (e: KeyboardEvent) => void
 ) => {
   React.useEffect(() => {
-    console.log("runnnig hook");
-
     function keyboardHandler(e: KeyboardEvent) {
-      handler(e);
+      e.preventDefault();
+      if (e.type === "keyup") handler(e);
     }
     element?.addEventListener("keyup", keyboardHandler);
+    element?.addEventListener("keydown", keyboardHandler);
 
     return () => {
       element?.removeEventListener("keyup", keyboardHandler);
+      element?.removeEventListener("keydown", keyboardHandler);
     };
   }, [element, handler]);
 };

@@ -13,7 +13,7 @@ export const useMergeState = <T>(initialState: T) =>
     initialState
   );
 
-function shallowEqual(object1: any, object2: any) {
+function areShallowEqual(object1: any, object2: any) {
   const keys1 = Object.keys(object1);
   const keys2 = Object.keys(object2);
 
@@ -50,48 +50,46 @@ export const useControlledState = <
     initialInternalState,
     Object.keys(externalState)
   ) as InternalState;
-  const [state, setState] = useMergeState<InternalState>(newLocal);
-  const stateRef = React.useRef<InternalState>(state);
+  //not needed?
+  const [internalState, setInternalState] = React.useState<InternalState>(
+    newLocal
+  );
+  //we cannot use updater function
+  const internalStateRef = React.useRef<InternalState>(internalState);
 
   //same ref?
   const dispatchActions = React.useCallback(
     (actions: Action[]) => {
-      //merge
-      const mergedState: State = overlapDefinedProps(
-        stateRef.current,
+      const oldState: State = overlapDefinedProps(
+        internalStateRef.current,
         externalState
       );
       const newState = actions.reduce(reducer, {
-        ...mergedState,
+        ...oldState,
       });
-
+      const changes = shallowDifference<State>(oldState, newState);
       const newInternalState = omitKeys(
         newState,
         Object.keys(externalState)
       ) as InternalState;
 
-      const somethingChanged = !shallowEqual(
-        stateRef.current,
-        newInternalState
-      );
-      if (somethingChanged) {
-        console.log("changed", stateRef.current, {
+      if (!areShallowEqual(internalStateRef.current, newInternalState)) {
+        console.log("changed", {
+          oldState: oldState,
           newState,
-          controlledState: externalState,
-          newXXX: newInternalState,
-          mergedState,
+          oldInternalState: internalStateRef.current,
+          newInternalState,
+          changed: changes,
         });
 
-        stateRef.current = newInternalState;
-        setState(stateRef.current);
+        internalStateRef.current = newInternalState;
+        setInternalState(internalStateRef.current);
       }
-      onStateChange?.(shallowDifference(stateRef.current, newState));
+
+      onStateChange?.(changes);
     },
-    [externalState, reducer, onStateChange]
+    [...Object.values(externalState), reducer, onStateChange]
   );
 
-  //console.log("prev", Object.is(prev, dispatchActions));
-  //prev = dispatchActions;
-
-  return [{ ...stateRef.current }, dispatchActions];
+  return [internalState, dispatchActions];
 };

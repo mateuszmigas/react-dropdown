@@ -3,12 +3,6 @@ import { DropdownActions } from "./actions";
 import { reducer as dropdownStateReducer, keyboarDispatcher } from "./reducers";
 import { useControlledState } from "./controlledState";
 
-export type DropdownState = {
-  isOpen: boolean;
-  selectedIndexes: number[];
-  highlightedIndex: number | null;
-};
-
 export type DropdownDispatch = (actions: DropdownActions[]) => void;
 
 export const isEmptyObject = (obj: Object) => {
@@ -19,6 +13,12 @@ const defaultInitialState: Partial<DropdownState> = {
   selectedIndexes: [],
   highlightedIndex: null,
   isOpen: false,
+};
+
+export type DropdownState = {
+  isOpen: boolean;
+  selectedIndexes: number[];
+  highlightedIndex: number | null;
 };
 
 export const useDropdownState = <

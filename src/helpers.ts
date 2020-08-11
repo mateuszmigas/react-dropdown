@@ -11,6 +11,21 @@ export function overlapDefinedProps(target: any, ...sources: any[]) {
   return result;
 }
 
+export function overrideDefinedOnly<
+  T1 extends { [key: string]: any },
+  T2 extends { [key: string]: any }
+>(first: T1, second: T2): T1 & T2 {
+  let result: { [key: string]: any } = { ...first };
+
+  for (const key of Object.keys(second)) {
+    const val = second[key];
+    if (val !== undefined) {
+      result[key] = val;
+    }
+  }
+  return result as T1 & T2;
+}
+
 export const omitKeys = <S extends {}>(obj: S, keys: string[]): Partial<S> => {
   return Object.keys(obj)
     .filter((key) => !keys.includes(key))

@@ -1,4 +1,3 @@
-import { keyboarDispatcher } from "./reducers";
 import React from "react";
 import { useKeyPressListener } from "./hooks";
 import { useControlledValues } from "./controlledState";
@@ -7,6 +6,7 @@ import {
   DropdownState,
   useDropdownState,
 } from "./useDropdownState";
+import { keyboarDispatcher } from "./reducers";
 
 //import "styles.css";
 
@@ -115,37 +115,22 @@ function SimpleTextDropdownF() {
     // }
   }, []);
 
-  const cv = useControlledValues({
-    highlightedIndex,
-  });
-
   const [dropdownState, dispachtStat] = useDropdownState(
     options.length,
-    cv,
+    {
+      highlightedIndex,
+    },
     onState
   );
 
-  const handler = React.useCallback(
-    (e: KeyboardEvent) => {
-      switch (e.key) {
-        case "Down":
-        case "ArrowDown":
-          dispachtStat(["HighlightNextIndex"]);
-          break;
-        case "Up":
-        case "ArrowUp":
-          dispachtStat(["HighlightPreviousIndex"]);
-          break;
-        default:
-          return;
-      }
-    },
+  const keyboardDisdpatcher = React.useMemo(
+    () => keyboarDispatcher(dispachtStat),
     [dispachtStat]
   );
 
-  useKeyPressListener(dropdownRef.current, handler);
+  useKeyPressListener(dropdownRef.current, keyboardDisdpatcher);
 
-  console.log("calling SimpleTextDropdown");
+  console.log("rendering SimpleTextDropdown");
 
   return (
     <div>
