@@ -11,11 +11,13 @@ import { DropdownActions } from "./actions";
 
 //import "styles.css";
 
+type MyActions = "SelectFirstTwo" | DropdownActions;
+
 export function DropdownButton<T>(props: {
   options: T[];
   isOpen: boolean;
   selectedIndexes: number[];
-  dispatch: DropdownDispatch;
+  dispatch: DropdownDispatch<MyActions>;
 }) {
   return (
     <div className="dropdown-button">
@@ -36,13 +38,11 @@ export function DropdownButton<T>(props: {
 
 //DropdownButton.whyDidYouRender = true;
 
-type MyActions = "SelectFirstTwo" | DropdownActions;
-
 export const DropdownList = function DropdownList<T>(props: {
   options: T[];
   selectedIndexes: number[];
   highlightedIndex: number | null;
-  dispatch: DropdownDispatch;
+  dispatch: DropdownDispatch<MyActions>;
 }) {
   const [search, setSearch] = React.useState("");
   console.log("rendering list", {

@@ -1,13 +1,7 @@
 import React from "react";
 import { DropdownActions } from "./actions";
-import { reducer as dropdownStateReducer, keyboarDispatcher } from "./reducers";
+import { reducer, keyboarDispatcher } from "./reducers";
 import { useControlledState } from "./controlledState";
-
-export type DropdownDispatch = (actions: DropdownActions[]) => void;
-
-export const isEmptyObject = (obj: Object) => {
-  return Object.keys(obj).length === 0;
-};
 
 const defaultInitialState: Partial<DropdownState> = {
   selectedIndexes: [],
@@ -15,24 +9,19 @@ const defaultInitialState: Partial<DropdownState> = {
   isOpen: false,
 };
 
+const defaultDropdownReducer = <Actions>(
+  state: DropdownState,
+  itemCount: number,
+  action: Actions
+) => reducer(state, itemCount, (action as unknown) as DropdownActions);
+
 export type DropdownState = {
   isOpen: boolean;
   selectedIndexes: number[];
   highlightedIndex: number | null;
 };
 
-export type Partial2 = Partial<DropdownState>;
-
-const defaultReducer = <Actions>(
-  state: DropdownState,
-  itemCount: number,
-  action: Actions
-) =>
-  dropdownStateReducer(
-    state,
-    itemCount,
-    (action as unknown) as DropdownActions
-  );
+export type DropdownDispatch<Action> = (actions: Action[]) => void;
 
 export const useDropdownState = <
   Actions = DropdownActions,
@@ -41,13 +30,13 @@ export const useDropdownState = <
 >(
   itemsCount: number,
   externalState: ExternalState,
-  onStateChange?: (changes: Partial<DropdownState>) => void,
+  onChange?: (changes: Partial<DropdownState>) => void,
   reducer: (
     state: DropdownState,
     itemCount: number,
     action: Actions
-  ) => DropdownState = defaultReducer
-): [InternalState, (actions: Actions[]) => void] => {
+  ) => DropdownState = defaultDropdownReducer
+): [InternalState, DropdownDispatch<Actions>] => {
   const stateReducer = React.useCallback(
     (state: DropdownState, action: Actions) =>
       reducer(state, itemsCount, action),
@@ -58,7 +47,7 @@ export const useDropdownState = <
     defaultInitialState as InternalState,
     externalState,
     stateReducer,
-    onStateChange
+    onChange
   );
 };
 //type Merge<T, U> = keyof (T | U) extends never ? T & U : never;

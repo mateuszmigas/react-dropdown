@@ -7,9 +7,9 @@ const clamp = (value: number, min: number, max: number) => {
   else return value;
 };
 
-export const keyboarDispatcher = (dispatch: DropdownDispatch) => (
-  e: KeyboardEvent
-) => {
+export const keyboarDispatcher = (
+  dispatch: DropdownDispatch<DropdownActions>
+) => (e: KeyboardEvent) => {
   switch (e.key) {
     case "Enter":
       dispatch(["SelectHighlightedIndex"]);

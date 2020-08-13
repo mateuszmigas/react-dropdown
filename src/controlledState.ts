@@ -30,7 +30,7 @@ export const useControlledState = <
   initialInternalState: InternalState,
   externalState: ExternalState,
   reducer: (state: State, action: Action) => State,
-  onStateChange?: (changes: Partial<State>) => void
+  onChange?: (changes: Partial<State>) => void
 ): [InternalState, (actions: Action[]) => void] => {
   const newLocal = omitKeys(
     initialInternalState,
@@ -72,9 +72,9 @@ export const useControlledState = <
         setInternalState(internalStateRef.current);
       }
 
-      onStateChange?.(changes);
+      onChange?.(changes);
     },
-    [...Object.values(externalState), reducer, onStateChange]
+    [...Object.values(externalState), reducer, onChange]
   );
 
   return [internalState, dispatch];
