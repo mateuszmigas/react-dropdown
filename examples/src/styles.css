@@ -1,0 +1,40 @@
+.dropdown-container {
+  background: red;
+  position: relative;
+}
+
+.dropdown-select {
+  flex-grow: 1;
+}
+
+.dropdown-close {
+  width: 30px;
+}
+
+.dropdown-main {
+  background: orange;
+  display: flex;
+  flex-grow: 1;
+  border: 1px solid;
+}
+
+.dropdown-list {
+  max-height: 300px;
+  overflow: overlay;
+  position: absolute;
+  background: white;
+  width: calc(100% - 2px);
+  border: 1px solid;
+  margin-top: -1px;
+  z-index: 1;
+}
+
+.dropdown-list-item {
+  height: 30px;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
