@@ -4,7 +4,11 @@
 }
 
 .dropdown-select {
+  display: flex;
   flex-grow: 1;
+  align-items: center;
+  justify-content: space-between;
+  margin: 5px;
 }
 
 .dropdown-close {
@@ -30,7 +34,7 @@
 }
 
 .dropdown-list-item {
-  height: 30px;
+  margin: 5px;
 }
 
 .App {
