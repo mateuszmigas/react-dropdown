@@ -11,7 +11,7 @@
   margin: 5px;
 }
 
-.dropdown-close {
+.dropdown-clear {
   width: 30px;
 }
 
@@ -24,7 +24,7 @@
 
 .dropdown-list {
   max-height: 300px;
-  overflow: overlay;
+  overflow: auto;
   position: absolute;
   background: white;
   width: calc(100% - 2px);
@@ -35,6 +35,14 @@
 
 .dropdown-list-item {
   margin: 5px;
+}
+
+.selected {
+  color: blue;
+}
+
+.highlighted {
+  background: lightgray;
 }
 
 .App {

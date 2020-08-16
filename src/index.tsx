@@ -101,92 +101,94 @@ DropdownList.whyDidYouRender = true;
 
 const options = ["A", "B", "C", "D", "E", "F", "G", "H"];
 
-function SimpleTextDropdownF() {
-  // const [isOpen, setIsOpen] = React.useState(true);
-  const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
-    2
-  );
+// function SimpleTextDropdownF() {
+//   // const [isOpen, setIsOpen] = React.useState(true);
+//   const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
+//     2
+//   );
 
-  const dropdownRef = React.useRef(null);
+//   const dropdownRef = React.useRef(null);
 
-  const onState = React.useCallback((changes: Partial<DropdownState>) => {
-    if (changes.highlightedIndex !== undefined) {
-      setHighlightedIndex(changes.highlightedIndex);
-    }
-    // if (changes.isOpen !== undefined) {
-    //   setIsOpen(changes.isOpen);
-    // }
-  }, []);
+//   const onState = React.useCallback((changes: Partial<DropdownState>) => {
+//     if (changes.highlightedIndex !== undefined) {
+//       setHighlightedIndex(changes.highlightedIndex);
+//     }
+//     // if (changes.isOpen !== undefined) {
+//     //   setIsOpen(changes.isOpen);
+//     // }
+//   }, []);
 
-  // const [fsef, aaaaa] = useControlledState(
-  //   { a: "1", b: "2" },
-  //   { a: "3", c: "5", f: 23 },
-  //   (state: { a: string; b: string; c: string }, action: any) => state
-  // );
-  //  fsef.
+//   // const [fsef, aaaaa] = useControlledState(
+//   //   { a: "1", b: "2" },
+//   //   { a: "3", c: "5", f: 23 },
+//   //   (state: { a: string; b: string; c: string }, action: any) => state
+//   // );
+//   //  fsef.
 
-  const customReducer = React.useCallback(
-    (state: DropdownState, itemCount: number, action: MyActions) => {
-      if (typeof action === "string" && action === "SelectFirstTwo") {
-        return {
-          ...state,
-          selectedIndexes: [0, 1],
-        };
-      }
+//   const customReducer = React.useCallback(
+//     (state: DropdownState, itemCount: number, action: MyActions) => {
+//       if (typeof action === "string" && action === "SelectFirstTwo") {
+//         return {
+//           ...state,
+//           selectedIndexes: [0, 1],
+//         };
+//       }
 
-      return reducer(state, itemCount, action);
-    },
-    []
-  );
-  const [dropdownState, dispachtStat] = useDropdownState(
-    options.length,
-    {
-      highlightedIndex,
-    },
+//       return reducer(state, itemCount, action);
+//     },
+//     []
+//   );
+//   const [dropdownState, dispachtStat] = useDropdownState(
+//     options.length,
+//     {
+//       highlightedIndex,
+//     },
 
-    onState,
-    customReducer
-  );
+//     onState,
+//     customReducer
+//   );
 
-  //dropdownState.
+//   //dropdownState.
 
-  const keyboardDisdpatcher = React.useMemo(
-    () => keyboarDispatcher(dispachtStat),
-    [dispachtStat]
-  );
+//   const keyboardDisdpatcher = React.useMemo(
+//     () => keyboarDispatcher(dispachtStat),
+//     [dispachtStat]
+//   );
 
-  useKeyPressListener(dropdownRef.current, keyboardDisdpatcher);
+//   useKeyPressListener(dropdownRef.current, () => {
+//     console.log("cckk");
+//   });
 
-  console.log("rendering SimpleTextDropdown");
+//   console.log("rendering SimpleTextDropdown2");
 
-  return (
-    <div>
-      <div>before2</div>
-      <button onClick={() => dispachtStat(["SelectFirstTwo"])}>
-        Select first two
-      </button>
-      <div ref={dropdownRef} className="dropdown">
-        <DropdownButton
-          {...dropdownState}
-          dispatch={dispachtStat}
-          //isOpen={isOpen}
-          options={options}
-        ></DropdownButton>
-        {dropdownState.isOpen && (
-          <DropdownList
-            {...dropdownState}
-            highlightedIndex={highlightedIndex}
-            dispatch={dispachtStat}
-            options={options}
-          ></DropdownList>
-        )}
-      </div>
-      <div>after</div>
-    </div>
-  );
-}
-SimpleTextDropdownF.whyDidYouRender = true;
-export const SimpleTextDropdown = React.memo(SimpleTextDropdownF);
+//   return (
+//     <div>
+//       <div>before2</div>
+//       <button onClick={() => dispachtStat(["SelectFirstTwo"])}>
+//         Select first two
+//       </button>
+//       <div ref={dropdownRef} className="dropdown">
+//         <DropdownButton
+//           {...dropdownState}
+//           dispatch={dispachtStat}
+//           //isOpen={isOpen}
+//           options={options}
+//         ></DropdownButton>
+//         {dropdownState.isOpen && (
+//           <DropdownList
+//             {...dropdownState}
+//             highlightedIndex={highlightedIndex}
+//             dispatch={dispachtStat}
+//             options={options}
+//           ></DropdownList>
+//         )}
+//       </div>
+//       <div>after</div>
+//     </div>
+//   );
+// }
+// SimpleTextDropdownF.whyDidYouRender = true;
+// export const SimpleTextDropdown = React.memo(SimpleTextDropdownF);
 
 export const RemoteSearchDropdown = () => {};
 

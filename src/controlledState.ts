@@ -1,6 +1,7 @@
 import { DropdownActions } from "./actions";
 import React from "react";
 import { overlapDefinedProps, shallowDifference, omitKeys } from "./helpers";
+import { DropdownState } from "./useDropdownState";
 
 function areShallowEqual(object1: any, object2: any) {
   const keys1 = Object.keys(object1);
@@ -21,17 +22,24 @@ function areShallowEqual(object1: any, object2: any) {
 
 type Merge<T, U> = keyof (T | U) extends never ? T & U : never;
 
+export const isActionInvoker = <State, Action>(
+  foo: any
+): foo is (state: State) => Action => {
+  return typeof foo === "function";
+};
+
 export const useControlledState = <
   Action,
   InternalState extends {},
   ExternalState extends {},
-  State extends {}
+  State extends {},
+  ActionInvoker = (state: State) => Action
 >(
   initialInternalState: InternalState,
   externalState: ExternalState,
   reducer: (state: State, action: Action) => State,
   onChange?: (changes: Partial<State>) => void
-): [InternalState, (actions: Action[]) => void] => {
+): [InternalState, (actions: (Action | ActionInvoker)[]) => void] => {
   const newLocal = omitKeys(
     initialInternalState,
     Object.keys(externalState)
@@ -43,16 +51,24 @@ export const useControlledState = <
   //we cannot use updater function
   const internalStateRef = React.useRef<InternalState>(internalState);
 
-  //same ref?
   const dispatch = React.useCallback(
-    (actions: Action[]) => {
+    (actions: (Action | ActionInvoker)[]) => {
       const oldState: State = overlapDefinedProps(
         internalStateRef.current,
         externalState
       );
-      const newState = actions.reduce(reducer, {
-        ...oldState,
-      });
+      const newState = actions.reduce(
+        (state: State, action: Action | ActionInvoker) =>
+          reducer(
+            state,
+            isActionInvoker<State, Action>(action)
+              ? action(state)
+              : (action as Action)
+          ),
+        {
+          ...oldState,
+        }
+      );
       const changes = shallowDifference<State>(oldState, newState);
       const newInternalState = omitKeys(
         newState,
@@ -76,6 +92,7 @@ export const useControlledState = <
     },
     [...Object.values(externalState), reducer, onChange]
   );
+  //same ref?
 
   return [internalState, dispatch];
 };

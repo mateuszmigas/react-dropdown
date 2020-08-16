@@ -4,7 +4,9 @@
   "description": "Generic react dropdown",
   "main": "index.js",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "examples": "yarn --cwd examples start",
+    "watch": "tsc --watch"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
     "@types/react": "16.9.43",
     "@types/react-window": "^1.8.2",
     "react": "16.13.1",
+    "react-dom": "^16.13.1",
     "typescript": "3.9.6"
   },
   "peerDependencies": {
