@@ -20,59 +20,58 @@ export const useKeyPressListener = (
   }, [element, handler]);
 };
 
-export const dropdownSelectKeyMap = (
-  key: string
-): (DropdownActions | DropdownActionCreator)[] => {
-  console.log("select");
-
-  switch (key) {
-    case "Enter":
-    case " ":
-      return [(state) => (state.isOpen ? "CloseList" : "OpenList")]; //swap list open
-    case "Esc":
-    case "Escape":
-      return ["CloseList"];
-    default:
-      return [];
-  }
-};
-
-export const dropdownListKeyMap = (key: string): DropdownActions[] => {
-  console.log("list");
-
-  switch (key) {
-    case "Enter":
-      return ["SelectHighlightedIndex"]; //kebyard enter
-    case "Esc":
-    case "Escape":
-      return ["CloseList"];
-    case "Down":
-    case "ArrowDown":
-      return ["HighlightNextIndex"];
-    case "Up":
-    case "ArrowUp":
-      return ["HighlightPreviousIndex"];
-    default:
-      return [];
-  }
-};
-
 export const useDropdownKeyPressListener = (
   element: HTMLElement | null,
-  dispatch: DropdownDispatch<DropdownActions>,
-  keyActionMap: (key: string) => DropdownActions[]
+  isOpen: boolean,
+  dispatch: DropdownDispatch<DropdownActions>
 ) => {
-  const callback = React.useCallback(
-    (e: KeyboardEvent) => {
-      const actions = keyActionMap(e.key);
-      if (actions) {
-        e.preventDefault();
-        dispatch(actions);
-      }
-    },
-    [element, dispatch, keyActionMap]
+  const keyPressHandler = React.useMemo(
+    () => createDefaultKebyboardNavigator(isOpen, dispatch),
+    [isOpen, dispatch]
   );
-  useKeyPressListener(element, callback);
+
+  useKeyPressListener(element, keyPressHandler);
+};
+
+export const useDropdownClickOutsideListener = (
+  element: HTMLElement | null,
+  dispatch: DropdownDispatch<DropdownActions>
+) => {
+  const clickHandler = React.useCallback(() => dispatch(["CloseList"]), [
+    dispatch,
+  ]);
+
+  useClickOutsideListener(element, clickHandler);
+};
+
+export const createDefaultKebyboardNavigator = (
+  isOpen: boolean,
+  dispatch: DropdownDispatch<DropdownActions>
+) => (e: KeyboardEvent) => {
+  console.log("dupa", e.key);
+
+  switch (e.key) {
+    case " ":
+      break;
+    case "Enter":
+      dispatch(isOpen ? ["SelectHighlightedIndex", "CloseList"] : ["OpenList"]);
+      e.preventDefault();
+      break;
+    case "Esc":
+    case "Escape":
+      dispatch(["CloseList"]);
+      break;
+    case "Down":
+    case "ArrowDown":
+      dispatch(["HighlightNextIndex"]);
+      break;
+    case "Up":
+    case "ArrowUp":
+      dispatch(["HighlightPreviousIndex"]);
+      break;
+    default:
+      return;
+  }
 };
 
 export const useClickOutsideListener = (
@@ -81,7 +80,7 @@ export const useClickOutsideListener = (
 ) => {
   React.useEffect(() => {
     function mouseHandler(e: MouseEvent) {
-      if (element?.contains(e.target as Node)) {
+      if (!element?.contains(e.target as Node)) {
         handler();
       }
     }

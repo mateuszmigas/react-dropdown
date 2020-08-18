@@ -8,11 +8,11 @@ import {
 } from "../../lib/useDropdownState";
 import { DropdownActions } from "../../lib/actions";
 import {
-  useKeyPressListener,
   useDropdownKeyPressListener,
-  dropdownSelectKeyMap,
-  dropdownListKeyMap,
+  useDropdownClickOutsideListener,
+  useKeyPressListener,
 } from "../../lib/hooks";
+import { DropdownVirtualizedList } from "./DropdownVirtualizedList";
 
 export const indexIterator = (count: number): number[] => {
   const result: number[] = [];
@@ -38,12 +38,6 @@ export const DropdownMain = (props: {
     dispatch,
   ]);
 
-  useDropdownKeyPressListener(
-    dropdownSelectRef.current,
-    dispatch,
-    dropdownSelectKeyMap
-  );
-
   return (
     <div className="dropdown-main">
       <button
@@ -67,22 +61,13 @@ export const DropdownList = (props: {
   renderItem: (index: number) => ReactNode;
 }) => {
   const { itemCount, dispatch, renderItem } = props;
-  const dropdownSelectRef = React.useRef<HTMLUListElement>(null);
-  useDropdownKeyPressListener(
-    dropdownSelectRef.current,
-    dispatch,
-    dropdownListKeyMap
-  );
 
-  React.useEffect(() => {
-    console.log("focusing", dropdownSelectRef.current);
-
-    dropdownSelectRef.current?.focus();
-  }, []);
+  const dropdownRef = React.useRef(null);
+  useKeyPressListener(dropdownRef.current, () => console.log("fsefs"));
   return (
-    <ul className="dropdown-list" ref={dropdownSelectRef} tabIndex={0}>
+    <div className="dropdown-list" ref={dropdownRef}>
       {indexIterator(itemCount).map((index) => renderItem(index))}
-    </ul>
+    </div>
   );
 };
 
@@ -92,10 +77,6 @@ export const DropdownItem = (props: {
   isHighlighted: boolean;
   onClick: () => void;
 }) => {};
-
-export const doAction = (
-  dis: (state: DropdownState) => DropdownActions[]
-) => {};
 
 export const MyDropdown = () => {
   //const [isOpen, setIsOpen] = React.useState(true);
@@ -107,7 +88,7 @@ export const MyDropdown = () => {
     { highlightedIndex: 0 }
   );
   // dropdownState.
-  const anotherRef = React.useRef(null);
+  const dropdownRef = React.useRef(null);
   const displayText = React.useMemo(
     () =>
       options
@@ -131,9 +112,9 @@ export const MyDropdown = () => {
       }`;
 
       return (
-        <li key={index} onClick={() => onItemClick(index)} className={style}>
+        <div key={index} onClick={() => onItemClick(index)} className={style}>
           {options[index]}
-        </li>
+        </div>
       );
     },
     [
@@ -144,19 +125,23 @@ export const MyDropdown = () => {
     ]
   );
 
-  useKeyPressListener(anotherRef.current, () => console.log("aaaa"));
+  useDropdownKeyPressListener(
+    dropdownRef.current,
+    dropdownState.isOpen,
+    dropdownDispatch
+  );
+
+  useDropdownClickOutsideListener(dropdownRef.current, dropdownDispatch);
 
   return (
-    <div className="dropdown-container">
+    <div className="dropdown-container" ref={dropdownRef}>
       <DropdownMain {...dropdownState} dispatch={dropdownDispatch}>
         <div>{displayText}</div>
       </DropdownMain>
       {dropdownState.isOpen && (
-        <DropdownList
-          itemCount={options.length}
-          dispatch={dropdownDispatch}
-          renderItem={renderItem}
-        ></DropdownList>
+        <DropdownVirtualizedList
+          itemsCount={options.length}
+        ></DropdownVirtualizedList>
       )}
     </div>
   );
@@ -167,6 +152,7 @@ function App() {
     <div className="App">
       <h4>Simple dropdown</h4>
       <MyDropdown></MyDropdown>
+      <div>another control</div>
     </div>
   );
 }
@@ -177,5 +163,6 @@ function App() {
 //multiselect dropdown with x
 //remote search dropdown
 //custom action
+//custom keyboard navigation
 
 export default App;

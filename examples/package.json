@@ -35,6 +35,10 @@
     ]
   },
   "devDependencies": {
-    "react-app-rewired": "^2.1.6"
+    "@types/react-virtualized-auto-sizer": "^1.0.0",
+    "@types/react-window": "^1.8.2",
+    "react-app-rewired": "^2.1.6",
+    "react-virtualized-auto-sizer": "^1.0.2",
+    "react-window": "^1.8.5"
   }
 }
