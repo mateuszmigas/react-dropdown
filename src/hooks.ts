@@ -1,6 +1,7 @@
 import React from "react";
 import { DropdownDispatch, DropdownState } from "./useDropdownState";
 import { DropdownActions, DropdownActionCreator } from "./actions";
+import { FixedSizeList } from "react-window";
 
 export const useKeyPressListener = (
   element: HTMLElement | null,
@@ -18,19 +19,6 @@ export const useKeyPressListener = (
       element?.removeEventListener("keydown", keyboardHandler);
     };
   }, [element, handler]);
-};
-
-export const useDropdownKeyPressListener = (
-  element: HTMLElement | null,
-  isOpen: boolean,
-  dispatch: DropdownDispatch<DropdownActions>
-) => {
-  const keyPressHandler = React.useMemo(
-    () => createDefaultKebyboardNavigator(isOpen, dispatch),
-    [isOpen, dispatch]
-  );
-
-  useKeyPressListener(element, keyPressHandler);
 };
 
 export const useDropdownClickOutsideListener = (
@@ -53,8 +41,25 @@ export const usePreviousValue = <T>(value: T) => {
   return valueRef.current;
 };
 
+export const useScrollToIndex = (
+  listElementRef: React.RefObject<FixedSizeList>,
+  index: number | null
+) => {
+  React.useEffect(() => {
+    if (index !== null) listElementRef.current?.scrollToItem(index, "smart");
+  }, [index]);
+};
+
+export const useFocusOnFirstRender = (
+  elementRef: React.RefObject<HTMLDivElement>
+) => {
+  React.useEffect(() => {
+    if (elementRef.current !== null) (elementRef.current as any).focus();
+  }, []);
+};
+
 export const useFocusOnClose = (
-  element: HTMLElement | null,
+  elementRef: React.RefObject<HTMLDivElement>,
   isOpen: boolean
 ) => {
   const initialRender = React.useRef(true);
@@ -62,25 +67,25 @@ export const useFocusOnClose = (
 
   React.useEffect(() => {
     if (isOpen !== previousIsOpen && !isOpen && !initialRender.current) {
-      if (element) (element as any).focus();
+      if (elementRef.current !== null) (elementRef.current as any).focus();
     }
 
     initialRender.current = false;
   }, [isOpen]);
 };
 
-export const createDefaultKebyboardNavigator = (
-  isOpen: boolean,
+export const useListKeyboardHandler = (
   dispatch: DropdownDispatch<DropdownActions>
-) => (e: KeyboardEvent) => {
-  console.log("dupa", e.key);
+) => React.useMemo(() => createListKeyboardHandler(dispatch), [dispatch]);
 
+export const createListKeyboardHandler = (
+  dispatch: DropdownDispatch<DropdownActions>
+) => (e: React.KeyboardEvent<Element>) => {
   switch (e.key) {
     case " ":
       break;
     case "Enter":
-      dispatch(isOpen ? ["SelectHighlightedIndex", "CloseList"] : ["OpenList"]);
-      e.preventDefault();
+      dispatch(["SelectHighlightedIndex", "CloseList"]);
       break;
     case "Esc":
     case "Escape":

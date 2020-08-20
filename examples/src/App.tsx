@@ -8,7 +8,6 @@ import {
 } from "../../lib/useDropdownState";
 import { DropdownActions } from "../../lib/actions";
 import {
-  useDropdownKeyPressListener,
   useDropdownClickOutsideListener,
   useKeyPressListener,
   useFocusOnClose,
@@ -30,7 +29,6 @@ export const DropdownMain = (props: {
 }) => {
   console.log("rendering DropdownMain");
   const { isOpen, children: content, dispatch } = props;
-  //const previousValue = usePreviousValue(isOpen);
   const dropdownSelectRef = React.useRef(null);
   const handleSelect = React.useCallback(
     () => dispatch([isOpen ? "CloseList" : "OpenList"]),
@@ -40,7 +38,7 @@ export const DropdownMain = (props: {
     dispatch,
   ]);
 
-  useFocusOnClose(dropdownSelectRef.current, isOpen);
+  useFocusOnClose(dropdownSelectRef, isOpen);
 
   return (
     <div className="dropdown-main">
@@ -84,6 +82,7 @@ export const DropdownItem = (props: {
 
 export const MyDropdown = () => {
   //const [isOpen, setIsOpen] = React.useState(true);
+  //const options = [randomNames[0], randomNames[1]];
   const options = randomNames;
   const itemCount = options.length;
   const [dropdownState, dropdownDispatch] = useDropdownState(
@@ -129,12 +128,6 @@ export const MyDropdown = () => {
     ]
   );
 
-  useDropdownKeyPressListener(
-    dropdownRef.current,
-    dropdownState.isOpen,
-    dropdownDispatch
-  );
-
   //useDropdownClickOutsideListener(dropdownRef.current, dropdownDispatch);
 
   return (
@@ -146,6 +139,7 @@ export const MyDropdown = () => {
         <DropdownVirtualizedList
           itemsCount={options.length}
           itemHeight={30}
+          maxHeight={105}
           contentRenderer={renderItem}
           dispatch={dropdownDispatch}
           highlightedIndex={dropdownState.highlightedIndex}
