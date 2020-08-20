@@ -43,6 +43,31 @@ export const useDropdownClickOutsideListener = (
 
   useClickOutsideListener(element, clickHandler);
 };
+export const usePreviousValue = <T>(value: T) => {
+  const valueRef = React.useRef<T>();
+
+  React.useEffect(() => {
+    valueRef.current = value;
+  });
+
+  return valueRef.current;
+};
+
+export const useFocusOnClose = (
+  element: HTMLElement | null,
+  isOpen: boolean
+) => {
+  const initialRender = React.useRef(true);
+  const previousIsOpen = usePreviousValue(isOpen);
+
+  React.useEffect(() => {
+    if (isOpen !== previousIsOpen && !isOpen && !initialRender.current) {
+      if (element) (element as any).focus();
+    }
+
+    initialRender.current = false;
+  }, [isOpen]);
+};
 
 export const createDefaultKebyboardNavigator = (
   isOpen: boolean,
