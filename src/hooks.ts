@@ -22,15 +22,16 @@ export const useKeyPressListener = (
 };
 
 export const useDropdownClickOutsideListener = (
-  element: HTMLElement | null,
+  elementRef: React.RefObject<HTMLElement>,
   dispatch: DropdownDispatch<DropdownActions>
 ) => {
   const clickHandler = React.useCallback(() => dispatch(["CloseList"]), [
     dispatch,
   ]);
 
-  useClickOutsideListener(element, clickHandler);
+  useClickOutsideListener(elementRef, clickHandler);
 };
+
 export const usePreviousValue = <T>(value: T) => {
   const valueRef = React.useRef<T>();
 
@@ -51,7 +52,7 @@ export const useScrollToIndex = (
 };
 
 export const useFocusOnFirstRender = (
-  elementRef: React.RefObject<HTMLDivElement>
+  elementRef: React.RefObject<HTMLElement>
 ) => {
   React.useEffect(() => {
     if (elementRef.current !== null) (elementRef.current as any).focus();
@@ -59,7 +60,7 @@ export const useFocusOnFirstRender = (
 };
 
 export const useFocusOnClose = (
-  elementRef: React.RefObject<HTMLDivElement>,
+  elementRef: React.RefObject<HTMLElement>,
   isOpen: boolean
 ) => {
   const initialRender = React.useRef(true);
@@ -67,6 +68,22 @@ export const useFocusOnClose = (
 
   React.useEffect(() => {
     if (isOpen !== previousIsOpen && !isOpen && !initialRender.current) {
+      if (elementRef.current !== null) (elementRef.current as any).focus();
+    }
+
+    initialRender.current = false;
+  }, [isOpen]);
+};
+
+export const useFocusOnOpen = (
+  elementRef: React.RefObject<HTMLElement>,
+  isOpen: boolean
+) => {
+  const initialRender = React.useRef(true);
+  const previousIsOpen = usePreviousValue(isOpen);
+
+  React.useEffect(() => {
+    if (isOpen !== previousIsOpen && isOpen && !initialRender.current) {
       if (elementRef.current !== null) (elementRef.current as any).focus();
     }
 
@@ -105,12 +122,12 @@ export const createListKeyboardHandler = (
 };
 
 export const useClickOutsideListener = (
-  element: HTMLElement | null,
+  elementRef: React.RefObject<HTMLElement>,
   handler: () => void
 ) => {
   React.useEffect(() => {
     function mouseHandler(e: MouseEvent) {
-      if (!element?.contains(e.target as Node)) {
+      if (!elementRef.current?.contains(e.target as Node)) {
         handler();
       }
     }
@@ -120,5 +137,5 @@ export const useClickOutsideListener = (
     return () => {
       document.removeEventListener("mousedown", mouseHandler);
     };
-  }, [element, handler]);
+  }, [handler]);
 };
