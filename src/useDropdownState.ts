@@ -3,6 +3,7 @@ import { DropdownActions } from "./actions";
 import { reducer, keyboarDispatcher } from "./reducers";
 import { useControlledState } from "./controlledState";
 import { overlapDefinedProps } from "./helpers";
+import { useEffectIgnoreFirstUpdate } from "./hooks";
 
 const defaultInitialState: Partial<DropdownState> = {
   selectedIndexes: [],
@@ -52,12 +53,19 @@ export const useDropdownState = <
   );
   console.log("initial", newLocal);
 
-  return useControlledState(
+  const [state, dispatch] = useControlledState(
     newLocal,
     //defaultInternalState ?? (defaultInitialState as InternalState),
     externalState,
     stateReducer,
     onChange
   );
+
+  useEffectIgnoreFirstUpdate(() => {
+    dispatch([("ClampIndexes" as unknown) as Actions]);
+    console.log("running");
+  }, [itemsCount, dispatch]);
+
+  return [state, dispatch];
 };
 //type Merge<T, U> = keyof (T | U) extends never ? T & U : never;

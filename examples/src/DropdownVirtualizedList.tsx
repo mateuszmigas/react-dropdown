@@ -1,14 +1,8 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
-import { DropdownDispatch } from "../../lib/useDropdownState";
-import { DropdownActions } from "../../lib/actions";
-import {
-  useScrollToIndex,
-  useFocusOnFirstRender,
-  useListKeyboardHandler,
-} from "../../lib/hooks";
+import { useScrollToIndex } from "../../lib/hooks";
 
-const memoizedRow = React.memo(function VirtualizedRow<T>(props: {
+const memoizedRow = React.memo(function VirtualizedRow(props: {
   index: number;
   style: React.CSSProperties;
   data: {

@@ -13,6 +13,7 @@ export type DropdownActions =
   | "HighlightPreviousIndex"
   | "HighlightNextIndex"
   | "HighlightLastIndex"
-  | "SelectHighlightedIndex";
+  | "SelectHighlightedIndex"
+  | "ClampIndexes";
 
 export type DropdownActionCreator = (state: DropdownState) => DropdownActions;

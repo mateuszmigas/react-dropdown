@@ -32,14 +32,13 @@ export const useControlledState = <
   Action,
   InternalState extends {},
   ExternalState extends {},
-  State extends {},
-  ActionInvoker = (state: State) => Action
+  State extends {}
 >(
   initialInternalState: InternalState,
   externalState: ExternalState,
   reducer: (state: State, action: Action) => State,
   onChange?: (changes: Partial<State>) => void
-): [InternalState, (actions: (Action | ActionInvoker)[]) => void] => {
+): [InternalState, (actions: Action[]) => void] => {
   const newLocal = omitKeys(
     initialInternalState,
     Object.keys(externalState)
@@ -52,23 +51,14 @@ export const useControlledState = <
   const internalStateRef = React.useRef<InternalState>(internalState);
 
   const dispatch = React.useCallback(
-    (actions: (Action | ActionInvoker)[]) => {
+    (actions: Action[]) => {
       const oldState: State = overlapDefinedProps(
         internalStateRef.current,
         externalState
       );
-      const newState = actions.reduce(
-        (state: State, action: Action | ActionInvoker) =>
-          reducer(
-            state,
-            isActionInvoker<State, Action>(action)
-              ? action(state)
-              : (action as Action)
-          ),
-        {
-          ...oldState,
-        }
-      );
+      const newState = actions.reduce(reducer, {
+        ...oldState,
+      });
       const changes = shallowDifference<State>(oldState, newState);
       const newInternalState = omitKeys(
         newState,

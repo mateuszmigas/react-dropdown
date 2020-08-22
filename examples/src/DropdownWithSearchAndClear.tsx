@@ -1,6 +1,5 @@
 import React from "react";
-import { randomNames } from "./names";
-import { useDropdownState } from "../../lib/useDropdownState";
+import { useDropdownState, DropdownState } from "../../lib/useDropdownState";
 import {
   useDropdownClickOutsideListener,
   useListKeyboardHandler,
@@ -8,78 +7,69 @@ import {
 } from "../../lib/hooks";
 import { DropdownVirtualizedList } from "./DropdownVirtualizedList";
 import { DropdownMain } from "./DropdownMain";
+import { DropdownListItem } from "./DropdownListItem";
 
-export const DropdownWithSearchAndClear = () => {
-  const options = randomNames;
+export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
+  const [query, setQuery] = React.useState("");
+  const filteredOptions = props.options.filter((o) => o.includes(query));
+  const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
 
-  const [dropdownState, dispatch] = useDropdownState(
-    options.length,
+  const [state, dispatch] = useDropdownState(
+    filteredOptions.length,
     {},
-    { highlightedIndex: 0 }
+    { highlightedIndex: 0 },
+    (change: Partial<DropdownState>) => {
+      if (change.selectedIndexes !== undefined) {
+        console.log("setting item", filteredOptions[change.selectedIndexes[0]]);
+
+        setSelectedItem(
+          change.selectedIndexes.length > 0
+            ? filteredOptions[change.selectedIndexes[0]]
+            : null
+        );
+      }
+    }
   );
-
-  const selectedIndex =
-    dropdownState.selectedIndexes.length > 0
-      ? dropdownState.selectedIndexes[0]
-      : null;
-
   const containerRef = React.useRef<HTMLDivElement>(null);
-
-  const onItemClick = React.useCallback(
-    (index: number) => dispatch([{ type: "SelectIndex", index }]),
-    [dispatch]
-  );
-
-  const renderItem = React.useCallback(
-    (index) => {
-      const isSelected = dropdownState.selectedIndexes.includes(index);
-      const isHighlighted = dropdownState.highlightedIndex === index;
-      const style = `dropdown-list-item ${isSelected ? "selected" : ""}  ${
-        isHighlighted ? "highlighted" : ""
-      }`;
-
-      return (
-        <div key={index} onClick={() => onItemClick(index)} className={style}>
-          {options[index]}
-        </div>
-      );
-    },
-    [
-      onItemClick,
-      options,
-      dropdownState.selectedIndexes,
-      dropdownState.highlightedIndex,
-    ]
-  );
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
   useDropdownClickOutsideListener(containerRef, dispatch);
+  useFocusOnOpen(inputRef, state.isOpen);
 
   const listKeyboardHandler = useListKeyboardHandler(dispatch);
-  const listRef = React.useRef<HTMLDivElement>(null);
-  useFocusOnOpen(listRef, dropdownState.isOpen);
 
   return (
     <div ref={containerRef} className="dropdown-container">
       <DropdownMain
-        {...dropdownState}
+        {...state}
         dispatch={dispatch}
-        itemRenderer={() => (
-          <div>{selectedIndex !== null ? options[selectedIndex] : ""}</div>
-        )}
+        itemRenderer={() => <div>{selectedItem}</div>}
       ></DropdownMain>
-      {dropdownState.isOpen && (
+      {state.isOpen && (
         <div
           className="dropdown-list"
-          //tabIndex={0}
           onKeyDown={listKeyboardHandler}
+          //  onBlur={() => dispatch(["CloseList"])}
         >
-          <input ref={listRef as any} value={"fes"}></input>
+          <input
+            ref={inputRef}
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          ></input>
           <DropdownVirtualizedList
-            itemsCount={options.length}
+            itemsCount={filteredOptions.length}
             itemHeight={30}
+            highlightedIndex={state.highlightedIndex}
             maxHeight={105}
-            itemRenderer={renderItem}
-            highlightedIndex={dropdownState.highlightedIndex}
+            itemRenderer={(index) => (
+              <DropdownListItem
+                text={filteredOptions[index]}
+                index={index}
+                isSelected={filteredOptions[index] === selectedItem}
+                isHighlighted={state.highlightedIndex === index}
+                dispatch={dispatch}
+              ></DropdownListItem>
+            )}
           ></DropdownVirtualizedList>
         </div>
       )}

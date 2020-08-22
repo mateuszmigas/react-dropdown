@@ -31,11 +31,8 @@ export const keyboarDispatcher = (
   }
 };
 
-const increaseIndex = (
-  current: number | null | undefined,
-  total: number,
-  offset: number
-) => (total > 0 ? clamp((current ?? 0) + offset, 0, total - 1) : null);
+const increaseIndex = (current: number, total: number, offset: number) =>
+  total > 0 ? clamp(current + offset, 0, total - 1) : null;
 
 export const reducer = (
   state: DropdownState,
@@ -64,21 +61,19 @@ export const reducer = (
       case "HighlightPreviousIndex": {
         return {
           ...state,
-          highlightedIndex: increaseIndex(
-            state.highlightedIndex,
-            itemsCount,
-            -1
-          ),
+          highlightedIndex:
+            state.highlightedIndex != null
+              ? increaseIndex(state.highlightedIndex, itemsCount, -1)
+              : 0,
         };
       }
       case "HighlightNextIndex": {
         return {
           ...state,
-          highlightedIndex: increaseIndex(
-            state.highlightedIndex,
-            itemsCount,
-            1
-          ),
+          highlightedIndex:
+            state.highlightedIndex != null
+              ? increaseIndex(state.highlightedIndex, itemsCount, 1)
+              : 0,
         };
       }
       case "HighlightLastIndex":
@@ -101,6 +96,16 @@ export const reducer = (
           ...state,
           selectedIndexes: [],
           highlightedIndex: itemsCount > 0 ? 0 : null,
+        };
+      }
+      case "ClampIndexes": {
+        return {
+          ...state,
+          highlightedIndex:
+            state.highlightedIndex === null ||
+            state.highlightedIndex < itemsCount
+              ? state.highlightedIndex
+              : itemsCount - 1,
         };
       }
       default:

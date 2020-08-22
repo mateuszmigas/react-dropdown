@@ -51,12 +51,19 @@ export const useScrollToIndex = (
   }, [index]);
 };
 
-export const useFocusOnFirstRender = (
-  elementRef: React.RefObject<HTMLElement>
+export const useEffectIgnoreFirstUpdate = (
+  callback: () => void,
+  deps?: React.DependencyList
 ) => {
-  React.useEffect(() => {
-    if (elementRef.current !== null) (elementRef.current as any).focus();
-  }, []);
+  const firstUpdate = React.useRef(true);
+  React.useLayoutEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false;
+      return;
+    }
+
+    callback();
+  }, deps);
 };
 
 export const useFocusOnClose = (
@@ -110,10 +117,12 @@ export const createListKeyboardHandler = (
       break;
     case "Down":
     case "ArrowDown":
+      e.preventDefault();
       dispatch(["HighlightNextIndex"]);
       break;
     case "Up":
     case "ArrowUp":
+      e.preventDefault();
       dispatch(["HighlightPreviousIndex"]);
       break;
     default:
