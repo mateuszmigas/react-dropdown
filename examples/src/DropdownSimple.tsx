@@ -54,7 +54,7 @@ export const DropdownSimple = (props: { options: string[] }) => {
             maxHeight={200}
             itemRenderer={(index) => (
               <DropdownListItem
-                text={options[index]}
+                text={`${index} ${options[index]}`}
                 index={index}
                 isSelected={state.selectedIndexes.includes(index)}
                 isHighlighted={state.highlightedIndex === index}

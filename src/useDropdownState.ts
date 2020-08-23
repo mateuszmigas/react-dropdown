@@ -31,7 +31,7 @@ export const useDropdownState = <
   ExternalState = Partial<DropdownState>,
   InternalState = Omit<DropdownState, keyof ExternalState>
 >(
-  itemsCount: number,
+  itemCount: number,
   externalState: ExternalState,
   defaultInternalState?: Partial<DropdownState>,
   onChange?: (changes: Partial<DropdownState>) => void,
@@ -43,8 +43,8 @@ export const useDropdownState = <
 ): [InternalState, DropdownDispatch<Actions>] => {
   const stateReducer = React.useCallback(
     (state: DropdownState, action: Actions) =>
-      reducer(state, itemsCount, action),
-    [itemsCount, reducer]
+      reducer(state, itemCount, action),
+    [itemCount, reducer]
   );
 
   const newLocal = overlapDefinedProps(
@@ -64,7 +64,7 @@ export const useDropdownState = <
   useEffectIgnoreFirstUpdate(() => {
     dispatch([("ClampIndexes" as unknown) as Actions]);
     console.log("running");
-  }, [itemsCount, dispatch]);
+  }, [itemCount, dispatch]);
 
   return [state, dispatch];
 };

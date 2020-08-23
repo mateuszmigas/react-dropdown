@@ -3,6 +3,7 @@ import "./styles.css";
 import { DropdownSimple } from "./DropdownSimple";
 import { DropdownWithSearchAndClear } from "./DropdownWithSearchAndClear";
 import { randomNames } from "./names";
+import { DropdownWithRemotePagination } from "./DropdownWithRemotePagination";
 
 function App() {
   const options = randomNames;
@@ -19,6 +20,9 @@ function App() {
       <h4>Dropdown with controlled state</h4>
 
       <h4>Dropdown with remote search</h4>
+      <DropdownWithRemotePagination
+        options={options}
+      ></DropdownWithRemotePagination>
 
       <h4>Dropdown with multiple selection</h4>
 
