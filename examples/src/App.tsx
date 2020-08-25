@@ -1,16 +1,16 @@
 import React from "react";
 import "./styles.css";
 import { DropdownSimple } from "./DropdownSimple";
-import { DropdownWithSearchAndClear } from "./DropdownWithSearchAndClear";
-import { randomNames } from "./names";
-import { DropdownWithChunkLoading } from "./DropdownWithChunkLoading";
+import { DropdownSearch } from "./DropdownSearch";
+import { randomNames } from "./randomNames";
+import { DropdownChunkLoading } from "./DropdownChunkLoading";
 
 function App() {
   const options = randomNames;
 
   const fetchChunk = (start: number, end: number): Promise<string[]> => {
     return new Promise(resolve => setTimeout(resolve, 1000)).then(() =>
-      Promise.resolve(randomNames.slice(start, end))
+      Promise.resolve(randomNames.slice(start, end + 1))
     );
   };
 
@@ -19,20 +19,16 @@ function App() {
       <h4>Simple dropdown</h4>
       <DropdownSimple options={options}></DropdownSimple>
 
-      <input value={"cycki"}></input>
-
       <h4>Dropdown with search and clear</h4>
-      <DropdownWithSearchAndClear
-        options={options}
-      ></DropdownWithSearchAndClear>
+      <DropdownSearch options={options}></DropdownSearch>
 
       <h4>Dropdown with controlled state</h4>
 
       <h4>Dropdown with remote search</h4>
-      <DropdownWithChunkLoading
+      <DropdownChunkLoading
         itemCount={options.length}
         fetchItemsChunk={fetchChunk}
-      ></DropdownWithChunkLoading>
+      ></DropdownChunkLoading>
 
       <h4>Dropdown with multiple selection</h4>
 

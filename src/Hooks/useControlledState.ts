@@ -43,13 +43,13 @@ export const useControlledState = <
       ) as InternalState;
 
       if (!areShallowEqual(internalStateRef.current, newInternalState)) {
-        console.log("changed", {
-          oldState: oldState,
-          newState,
-          oldInternalState: internalStateRef.current,
-          newInternalState,
-          changed: changes,
-        });
+        // console.log("changed", {
+        //   oldState: oldState,
+        //   newState,
+        //   oldInternalState: internalStateRef.current,
+        //   newInternalState,
+        //   changed: changes,
+        // });
 
         internalStateRef.current = newInternalState;
         setInternalState(internalStateRef.current);

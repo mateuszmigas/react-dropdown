@@ -4,7 +4,7 @@ import { DropdownState } from "./state";
 
 export const reducer = (
   state: DropdownState,
-  itemsCount: number,
+  itemCount: number,
   action: DropdownActions
 ): DropdownState => {
   if (typeof action === "string") {
@@ -22,14 +22,14 @@ export const reducer = (
       case "HighlightFirstIndex":
         return {
           ...state,
-          highlightedIndex: itemsCount > 0 ? 0 : null,
+          highlightedIndex: itemCount > 0 ? 0 : null,
         };
       case "HighlightPreviousIndex": {
         return {
           ...state,
           highlightedIndex:
             state.highlightedIndex != null
-              ? increaseIndex(state.highlightedIndex, itemsCount, -1)
+              ? increaseIndex(state.highlightedIndex, itemCount, -1)
               : 0,
         };
       }
@@ -38,14 +38,14 @@ export const reducer = (
           ...state,
           highlightedIndex:
             state.highlightedIndex != null
-              ? increaseIndex(state.highlightedIndex, itemsCount, 1)
+              ? increaseIndex(state.highlightedIndex, itemCount, 1)
               : 0,
         };
       }
       case "HighlightLastIndex":
         return {
           ...state,
-          highlightedIndex: itemsCount > 0 ? itemsCount - 1 : null,
+          highlightedIndex: itemCount > 0 ? itemCount - 1 : null,
         };
       case "SelectHighlightedIndex": {
         return {
@@ -61,7 +61,7 @@ export const reducer = (
         return {
           ...state,
           selectedIndexes: [],
-          highlightedIndex: itemsCount > 0 ? 0 : null,
+          highlightedIndex: itemCount > 0 ? 0 : null,
         };
       }
       case "ClampIndexes": {
@@ -69,9 +69,9 @@ export const reducer = (
           ...state,
           highlightedIndex:
             state.highlightedIndex === null ||
-            state.highlightedIndex < itemsCount
+            state.highlightedIndex < itemCount
               ? state.highlightedIndex
-              : itemsCount - 1,
+              : itemCount - 1,
         };
       }
       default:

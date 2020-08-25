@@ -5,11 +5,7 @@ import {
   useListKeyboardHandler,
   useDropdownState,
 } from "../../lib/Hooks";
-import {
-  DropdownMain,
-  DropdownVirtualizedList,
-  DropdownListItem,
-} from "../../lib/Components";
+import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
 
 export const DropdownSimple = (props: { options: string[] }) => {
   const { options } = props;
@@ -47,21 +43,21 @@ export const DropdownSimple = (props: { options: string[] }) => {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownVirtualizedList
-            itemsCount={options.length}
+          <DropdownList
+            itemCount={options.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
             maxHeight={200}
             itemRenderer={index => (
-              <DropdownListItem
-                text={`${index} ${options[index]}`}
+              <DropdownItem
+                text={options[index]}
                 index={index}
                 isSelected={state.selectedIndexes.includes(index)}
                 isHighlighted={state.highlightedIndex === index}
                 dispatch={dispatch}
-              ></DropdownListItem>
+              ></DropdownItem>
             )}
-          ></DropdownVirtualizedList>
+          ></DropdownList>
         </div>
       )}
     </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 
-export const DropdownListItem = (props: {
+export const DropdownItem = (props: {
   text: string;
   index: number;
   isSelected: boolean;

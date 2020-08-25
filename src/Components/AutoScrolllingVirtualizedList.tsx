@@ -2,7 +2,7 @@ import React from "react";
 import { FixedSizeListProps, FixedSizeList } from "react-window";
 import { useScrollToIndex } from "../Hooks";
 
-export const AutoScrollingList = (
+export const AutoScrolllingVirtualizedList = (
   props: FixedSizeListProps & {
     listRef: React.RefObject<FixedSizeList>;
     highlightedIndex: number | null;

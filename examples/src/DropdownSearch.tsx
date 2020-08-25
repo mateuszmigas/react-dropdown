@@ -6,13 +6,9 @@ import {
   useFocusOnStateChange,
 } from "../../lib/Hooks";
 import { DropdownState } from "../../lib/Common/state";
-import {
-  DropdownMain,
-  DropdownVirtualizedList,
-  DropdownListItem,
-} from "../../lib/Components";
+import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
 
-export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
+export const DropdownSearch = (props: { options: string[] }) => {
   const [query, setQuery] = React.useState("");
   const filteredOptions = props.options.filter(o => o.includes(query));
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
@@ -54,21 +50,21 @@ export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
             value={query}
             onChange={e => setQuery(e.target.value)}
           ></input>
-          <DropdownVirtualizedList
-            itemsCount={filteredOptions.length}
+          <DropdownList
+            itemCount={filteredOptions.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
             maxHeight={105}
             itemRenderer={index => (
-              <DropdownListItem
+              <DropdownItem
                 text={filteredOptions[index]}
                 index={index}
                 isSelected={filteredOptions[index] === selectedItem}
                 isHighlighted={state.highlightedIndex === index}
                 dispatch={dispatch}
-              ></DropdownListItem>
+              ></DropdownItem>
             )}
-          ></DropdownVirtualizedList>
+          ></DropdownList>
         </div>
       )}
     </div>

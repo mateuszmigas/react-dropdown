@@ -1,8 +1,9 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
 import { useScrollToIndex } from "../Hooks";
+import { AutoScrolllingVirtualizedList } from "./AutoScrolllingVirtualizedList";
 
-const memoizedRow = React.memo(function VirtualizedRow(props: {
+const memoizedRow = React.memo(function Row(props: {
   index: number;
   style: React.CSSProperties;
   data: {
@@ -18,38 +19,39 @@ const memoizedRow = React.memo(function VirtualizedRow(props: {
   return <div style={style}>{itemRenderer(index)}</div>;
 });
 
-export const DropdownVirtualizedList = (props: {
-  itemsCount: number;
+export const DropdownList = (props: {
+  itemCount: number;
   itemHeight: number;
   maxHeight: number;
   itemRenderer: (index: number) => JSX.Element;
   highlightedIndex: number | null;
   className?: string;
 }) => {
-  console.log("rendering DropdownVirtualizedList");
+  console.log("rendering DropdownList");
 
-  const { itemsCount, itemHeight, maxHeight, itemRenderer, className } = props;
-  const height = Math.min(itemsCount * itemHeight, maxHeight);
+  const { itemCount, itemHeight, maxHeight, itemRenderer, className } = props;
+  const height = Math.min(itemCount * itemHeight, maxHeight);
   const itemData = React.useMemo(
     () => ({
       itemRenderer,
     }),
     [itemRenderer]
   );
-  const listRef = React.useRef<FixedSizeList>(null);
-  useScrollToIndex(listRef, props.highlightedIndex);
+
+  const ref = React.useRef<FixedSizeList>(null);
 
   return (
-    <FixedSizeList
+    <AutoScrolllingVirtualizedList
       className={className}
-      ref={listRef}
+      listRef={ref}
       height={height}
-      itemCount={itemsCount}
+      itemCount={itemCount}
       itemSize={itemHeight}
+      highlightedIndex={props.highlightedIndex}
       width={"100%"}
       itemData={itemData}
     >
       {memoizedRow}
-    </FixedSizeList>
+    </AutoScrolllingVirtualizedList>
   );
 };

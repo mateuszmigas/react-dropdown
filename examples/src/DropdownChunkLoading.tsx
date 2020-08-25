@@ -8,11 +8,11 @@ import {
 } from "../../lib/Hooks";
 import {
   DropdownMain,
-  DropdownListItem,
-  DropdownVirtualizedListRemote,
+  DropdownItem,
+  DropdownLazyLoadingList,
 } from "../../lib/Components";
 
-export const DropdownWithChunkLoading = (props: {
+export const DropdownChunkLoading = (props: {
   itemCount: number;
   fetchItemsChunk: (start: number, end: number) => Promise<string[]>;
 }) => {
@@ -56,7 +56,7 @@ export const DropdownWithChunkLoading = (props: {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownVirtualizedListRemote
+          <DropdownLazyLoadingList
             {...listProsp}
             itemCount={itemCount}
             itemHeight={30}
@@ -66,16 +66,16 @@ export const DropdownWithChunkLoading = (props: {
               !isLoaded ? (
                 <div>Loading..</div>
               ) : (
-                <DropdownListItem
+                <DropdownItem
                   text={loadedItems[index].value ?? ""}
                   index={index}
                   isSelected={state.selectedIndexes.includes(index)}
                   isHighlighted={state.highlightedIndex === index}
                   dispatch={dispatch}
-                ></DropdownListItem>
+                ></DropdownItem>
               )
             }
-          ></DropdownVirtualizedListRemote>
+          ></DropdownLazyLoadingList>
         </div>
       )}
     </div>

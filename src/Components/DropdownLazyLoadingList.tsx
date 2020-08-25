@@ -1,9 +1,9 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
-import { AutoScrollingList } from "./AutoScrollingList";
+import { AutoScrolllingVirtualizedList } from "./AutoScrolllingVirtualizedList";
 import InfiniteLoader from "react-window-infinite-loader";
 
-const memoizedRow = React.memo(function VirtualizedRow(props: {
+const memoizedRow = React.memo(function Row(props: {
   index: number;
   style: React.CSSProperties;
   data: {
@@ -20,7 +20,7 @@ const memoizedRow = React.memo(function VirtualizedRow(props: {
   return <div style={style}>{itemRenderer(index, isItemLoaded(index))}</div>;
 });
 
-export const DropdownVirtualizedListRemote = (props: {
+export const DropdownLazyLoadingList = (props: {
   itemCount: number;
   itemHeight: number;
   maxHeight: number;
@@ -30,7 +30,7 @@ export const DropdownVirtualizedListRemote = (props: {
   highlightedIndex: number | null;
   className?: string;
 }) => {
-  console.log("rendering DropdownVirtualizedList");
+  console.log("rendering DropdownLazyLoadingList");
 
   const {
     itemCount,
@@ -59,7 +59,7 @@ export const DropdownVirtualizedListRemote = (props: {
       loadMoreItems={loadMoreItems}
     >
       {({ onItemsRendered, ref }) => (
-        <AutoScrollingList
+        <AutoScrolllingVirtualizedList
           className={className}
           listRef={ref as React.RefObject<FixedSizeList>}
           height={height}
@@ -71,7 +71,7 @@ export const DropdownVirtualizedListRemote = (props: {
           itemData={itemData}
         >
           {memoizedRow}
-        </AutoScrollingList>
+        </AutoScrolllingVirtualizedList>
       )}
     </InfiniteLoader>
   );
