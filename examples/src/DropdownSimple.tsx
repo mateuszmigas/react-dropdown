@@ -1,8 +1,8 @@
 import React from "react";
 import {
+  useFocusOnStateChange,
   useCloseDropdownWhenClickedOutside,
   useListKeyboardHandler,
-  useFocusOnOpen,
   useDropdownState,
 } from "../../lib/Hooks";
 import {
@@ -27,7 +27,7 @@ export const DropdownSimple = (props: { options: string[] }) => {
   const listRef = React.useRef<HTMLDivElement>(null);
 
   useCloseDropdownWhenClickedOutside(containerRef, dispatch);
-  useFocusOnOpen(listRef, state.isOpen);
+  useFocusOnStateChange(listRef, state.isOpen, true);
 
   const listKeyboardHandler = useListKeyboardHandler(dispatch);
 

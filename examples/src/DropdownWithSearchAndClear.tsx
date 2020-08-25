@@ -1,9 +1,9 @@
 import React from "react";
 import {
   useListKeyboardHandler,
-  useFocusOnOpen,
   useCloseDropdownWhenClickedOutside,
   useDropdownState,
+  useFocusOnStateChange,
 } from "../../lib/Hooks";
 import { DropdownState } from "../../lib/Common/state";
 import {
@@ -23,8 +23,6 @@ export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
     { highlightedIndex: 0 },
     (change: Partial<DropdownState>) => {
       if (change.selectedIndexes !== undefined) {
-        console.log("setting item", filteredOptions[change.selectedIndexes[0]]);
-
         setSelectedItem(
           change.selectedIndexes.length > 0
             ? filteredOptions[change.selectedIndexes[0]]
@@ -33,11 +31,12 @@ export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
       }
     }
   );
+
   const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   useCloseDropdownWhenClickedOutside(containerRef, dispatch);
-  useFocusOnOpen(inputRef, state.isOpen);
+  useFocusOnStateChange(inputRef, state.isOpen, true);
 
   const listKeyboardHandler = useListKeyboardHandler(dispatch);
 
@@ -49,11 +48,7 @@ export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
         itemRenderer={() => <div>{selectedItem}</div>}
       ></DropdownMain>
       {state.isOpen && (
-        <div
-          className="dropdown-list"
-          onKeyDown={listKeyboardHandler}
-          onBlur={() => dispatch(["CloseList"])}
-        >
+        <div className="dropdown-list" onKeyDown={listKeyboardHandler}>
           <input
             ref={inputRef}
             value={query}
