@@ -1,9 +1,10 @@
 import React from "react";
-import { DropdownActions } from "./actions";
-import { reducer, keyboarDispatcher } from "./reducers";
-import { useControlledState } from "./controlledState";
-import { overlapDefinedProps } from "./helpers";
-import { useEffectIgnoreFirstUpdate } from "./hooks";
+import { DropdownState } from "../Common/state";
+import { DropdownDispatch } from "../Common/dispatch";
+import { DropdownActions } from "../Common/actions";
+import { reducer } from "../Common/reducer";
+import { overlapDefinedProps } from "../Common/helpers";
+import { useControlledState } from "./useControlledState";
 
 const defaultInitialState: Partial<DropdownState> = {
   selectedIndexes: [],
@@ -17,15 +18,6 @@ const defaultDropdownReducer = <Actions>(
   action: Actions
 ) => reducer(state, itemCount, (action as unknown) as DropdownActions);
 
-export type DropdownState = {
-  isOpen: boolean;
-  selectedIndexes: number[];
-  highlightedIndex: number | null;
-};
-
-export type DropdownDispatch<Action> = (actions: Action[]) => void;
-
-//todo default state
 export const useDropdownState = <
   Actions = DropdownActions,
   ExternalState = Partial<DropdownState>,
@@ -47,25 +39,15 @@ export const useDropdownState = <
     [itemCount, reducer]
   );
 
-  const newLocal = overlapDefinedProps(
+  const initialInternalState = overlapDefinedProps(
     defaultInitialState,
     defaultInternalState
   );
-  console.log("initial", newLocal);
 
-  const [state, dispatch] = useControlledState(
-    newLocal,
-    //defaultInternalState ?? (defaultInitialState as InternalState),
+  return useControlledState(
+    initialInternalState,
     externalState,
     stateReducer,
     onChange
   );
-
-  useEffectIgnoreFirstUpdate(() => {
-    dispatch([("ClampIndexes" as unknown) as Actions]);
-    console.log("running");
-  }, [itemCount, dispatch]);
-
-  return [state, dispatch];
 };
-//type Merge<T, U> = keyof (T | U) extends never ? T & U : never;

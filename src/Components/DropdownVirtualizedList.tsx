@@ -1,6 +1,6 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
-import { useScrollToIndex } from "../../lib/hooks";
+import { useScrollToIndex } from "../Hooks";
 
 const memoizedRow = React.memo(function VirtualizedRow(props: {
   index: number;

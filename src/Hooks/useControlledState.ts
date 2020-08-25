@@ -1,32 +1,10 @@
-import { DropdownActions } from "./actions";
 import React from "react";
-import { overlapDefinedProps, shallowDifference, omitKeys } from "./helpers";
-import { DropdownState } from "./useDropdownState";
-
-function areShallowEqual(object1: any, object2: any) {
-  const keys1 = Object.keys(object1);
-  const keys2 = Object.keys(object2);
-
-  if (keys1.length !== keys2.length) {
-    return false;
-  }
-
-  for (let key of keys1) {
-    if (object1[key] !== object2[key]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-type Merge<T, U> = keyof (T | U) extends never ? T & U : never;
-
-export const isActionInvoker = <State, Action>(
-  foo: any
-): foo is (state: State) => Action => {
-  return typeof foo === "function";
-};
+import {
+  overlapDefinedProps,
+  shallowDifference,
+  omitKeys,
+  areShallowEqual,
+} from "../Common/helpers";
 
 export const useControlledState = <
   Action,
@@ -43,11 +21,10 @@ export const useControlledState = <
     initialInternalState,
     Object.keys(externalState)
   ) as InternalState;
-  //not needed?
   const [internalState, setInternalState] = React.useState<InternalState>(
     newLocal
   );
-  //we cannot use updater function
+  //cannot use updater function
   const internalStateRef = React.useRef<InternalState>(internalState);
 
   const dispatch = React.useCallback(
@@ -82,7 +59,6 @@ export const useControlledState = <
     },
     [...Object.values(externalState), reducer, onChange]
   );
-  //same ref?
 
   return [internalState, dispatch];
 };

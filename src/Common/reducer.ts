@@ -1,46 +1,12 @@
 import { DropdownActions } from "./actions";
-import { DropdownDispatch, DropdownState } from "./useDropdownState";
-
-const clamp = (value: number, min: number, max: number) => {
-  if (value < min) return min;
-  else if (value > max) return max;
-  else return value;
-};
-
-export const keyboarDispatcher = (
-  dispatch: DropdownDispatch<DropdownActions>
-) => (e: KeyboardEvent) => {
-  switch (e.key) {
-    case "Enter":
-      dispatch(["SelectHighlightedIndex"]);
-      break;
-    case "Esc":
-    case "Escape":
-      dispatch(["CloseList"]);
-      break;
-    case "Down":
-    case "ArrowDown":
-      dispatch(["HighlightNextIndex"]);
-      break;
-    case "Up":
-    case "ArrowUp":
-      dispatch(["HighlightPreviousIndex"]);
-      break;
-    default:
-      return;
-  }
-};
-
-const increaseIndex = (current: number, total: number, offset: number) =>
-  total > 0 ? clamp(current + offset, 0, total - 1) : null;
+import { increaseIndex, assertNever } from "./helpers";
+import { DropdownState } from "./state";
 
 export const reducer = (
   state: DropdownState,
   itemsCount: number,
   action: DropdownActions
 ): DropdownState => {
-  //console.log("reducing");
-
   if (typeof action === "string") {
     switch (action) {
       case "CloseList":
@@ -109,8 +75,7 @@ export const reducer = (
         };
       }
       default:
-        //throw wrong action
-        return state;
+        return assertNever(action);
     }
   } else {
     switch (action.type) {
@@ -128,8 +93,7 @@ export const reducer = (
         };
       }
       default:
-        //throw wrong action
-        return state;
+        return assertNever(action);
     }
   }
 };

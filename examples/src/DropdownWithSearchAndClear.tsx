@@ -1,17 +1,20 @@
 import React from "react";
-import { useDropdownState, DropdownState } from "../../lib/useDropdownState";
 import {
-  useDropdownClickOutsideListener,
   useListKeyboardHandler,
   useFocusOnOpen,
-} from "../../lib/hooks";
-import { DropdownVirtualizedList } from "./DropdownVirtualizedList";
-import { DropdownMain } from "./DropdownMain";
-import { DropdownListItem } from "./DropdownListItem";
+  useCloseDropdownWhenClickedOutside,
+  useDropdownState,
+} from "../../lib/Hooks";
+import { DropdownState } from "../../lib/Common/state";
+import {
+  DropdownMain,
+  DropdownVirtualizedList,
+  DropdownListItem,
+} from "../../lib/Components";
 
 export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
   const [query, setQuery] = React.useState("");
-  const filteredOptions = props.options.filter((o) => o.includes(query));
+  const filteredOptions = props.options.filter(o => o.includes(query));
   const [selectedItem, setSelectedItem] = React.useState<string | null>(null);
 
   const [state, dispatch] = useDropdownState(
@@ -33,7 +36,7 @@ export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  useDropdownClickOutsideListener(containerRef, dispatch);
+  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
   useFocusOnOpen(inputRef, state.isOpen);
 
   const listKeyboardHandler = useListKeyboardHandler(dispatch);
@@ -49,19 +52,19 @@ export const DropdownWithSearchAndClear = (props: { options: string[] }) => {
         <div
           className="dropdown-list"
           onKeyDown={listKeyboardHandler}
-          //  onBlur={() => dispatch(["CloseList"])}
+          onBlur={() => dispatch(["CloseList"])}
         >
           <input
             ref={inputRef}
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={e => setQuery(e.target.value)}
           ></input>
           <DropdownVirtualizedList
             itemsCount={filteredOptions.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
             maxHeight={105}
-            itemRenderer={(index) => (
+            itemRenderer={index => (
               <DropdownListItem
                 text={filteredOptions[index]}
                 index={index}

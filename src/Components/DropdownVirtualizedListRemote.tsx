@@ -1,7 +1,7 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
-import InfiniteLoader from "react-window-infinite-loader";
 import { AutoScrollingList } from "./AutoScrollingList";
+import InfiniteLoader from "react-window-infinite-loader";
 
 const memoizedRow = React.memo(function VirtualizedRow(props: {
   index: number;

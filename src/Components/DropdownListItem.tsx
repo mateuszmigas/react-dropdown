@@ -1,6 +1,6 @@
 import React from "react";
-import { DropdownDispatch } from "../../lib/useDropdownState";
-import { DropdownActions } from "../../lib/actions";
+import { DropdownDispatch } from "../Common/dispatch";
+import { DropdownActions } from "../Common/actions";
 
 export const DropdownListItem = (props: {
   text: string;

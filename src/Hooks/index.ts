@@ -1,7 +1,9 @@
+export * from "./useControlledState";
+export * from "./useDropdownState";
 import React from "react";
-import { DropdownDispatch, DropdownState } from "./useDropdownState";
-import { DropdownActions, DropdownActionCreator } from "./actions";
 import { FixedSizeList } from "react-window";
+import { DropdownActions } from "../Common/actions";
+import { DropdownDispatch } from "../Common/dispatch";
 
 export const useKeyPressListener = (
   element: HTMLElement | null,
@@ -21,7 +23,7 @@ export const useKeyPressListener = (
   }, [element, handler]);
 };
 
-export const useDropdownClickOutsideListener = (
+export const useCloseDropdownWhenClickedOutside = (
   elementRef: React.RefObject<HTMLElement>,
   dispatch: DropdownDispatch<DropdownActions>
 ) => {
@@ -30,6 +32,17 @@ export const useDropdownClickOutsideListener = (
   ]);
 
   useClickOutsideListener(elementRef, clickHandler);
+};
+
+export const useCloseDropdownWhenFocusOut = (
+  elementRef: React.RefObject<HTMLElement>,
+  dispatch: DropdownDispatch<DropdownActions>
+) => {
+  const clickHandler = React.useCallback(() => dispatch(["CloseList"]), [
+    dispatch,
+  ]);
+
+  useFocusOutListener(elementRef, clickHandler);
 };
 
 export const usePreviousValue = <T>(value: T) => {
@@ -113,6 +126,7 @@ export const createListKeyboardHandler = (
       break;
     case "Esc":
     case "Escape":
+    case "Tab":
       dispatch(["CloseList"]);
       break;
     case "Down":
@@ -147,4 +161,64 @@ export const useClickOutsideListener = (
       document.removeEventListener("mousedown", mouseHandler);
     };
   }, [handler]);
+};
+
+export const useFocusOutListener = (
+  elementRef: React.RefObject<HTMLElement>,
+  handler: () => void
+) => {
+  React.useEffect(() => {
+    function focusOutHandler(e: FocusEvent) {
+      if (!elementRef.current?.contains(e.relatedTarget as Node)) {
+        handler();
+      }
+    }
+
+    elementRef.current?.addEventListener("focusout", focusOutHandler);
+
+    return () => {
+      elementRef.current?.removeEventListener("focusout", focusOutHandler);
+    };
+  }, [handler]);
+};
+
+export const useLazyLoader = <T>(
+  itemCount: number,
+  load: (startIndex: number, endIndex: number) => Promise<T[]>
+) => {
+  const loadedItems: {
+    value: T | null;
+    isLoaded: boolean;
+  }[] = React.useMemo(
+    () => Array(itemCount).fill({ value: null, isLoaded: false }),
+    [itemCount]
+  );
+
+  const isItemLoaded = React.useCallback(
+    (index: number) => loadedItems[index].isLoaded,
+    [loadedItems]
+  );
+
+  const loadMoreItems = React.useCallback(
+    (startIndex: number, stopIndex: number) =>
+      load(startIndex, stopIndex).then(newItems => {
+        for (
+          let itemsIndex = startIndex, index = 0;
+          itemsIndex <= stopIndex;
+          itemsIndex++, index++
+        ) {
+          loadedItems[itemsIndex] = {
+            value: newItems[index],
+            isLoaded: true,
+          };
+        }
+      }),
+    [loadedItems]
+  );
+
+  return {
+    loadedItems,
+    isItemLoaded,
+    loadMoreItems,
+  };
 };

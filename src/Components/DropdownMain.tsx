@@ -1,7 +1,7 @@
 import React from "react";
-import { DropdownDispatch } from "../../lib/useDropdownState";
-import { DropdownActions } from "../../lib/actions";
-import { useFocusOnClose } from "../../lib/hooks";
+import { DropdownDispatch } from "../Common/dispatch";
+import { DropdownActions } from "../Common/actions";
+import { useFocusOnClose } from "../Hooks";
 
 export const DropdownMain = (props: {
   isOpen: boolean;
@@ -22,7 +22,7 @@ export const DropdownMain = (props: {
   useFocusOnClose(dropdownSelectRef, isOpen);
 
   return (
-    <div className="dropdown-main">
+    <div className="dropdown-main" key="editor1">
       <button
         ref={dropdownSelectRef}
         className="dropdown-select"

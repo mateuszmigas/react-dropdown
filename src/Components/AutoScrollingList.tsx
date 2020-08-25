@@ -1,6 +1,6 @@
 import React from "react";
 import { FixedSizeListProps, FixedSizeList } from "react-window";
-import { useScrollToIndex } from "../../lib/hooks";
+import { useScrollToIndex } from "../Hooks";
 
 export const AutoScrollingList = (
   props: FixedSizeListProps & {

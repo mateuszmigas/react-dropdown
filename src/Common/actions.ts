@@ -1,5 +1,3 @@
-import { DropdownState } from "./useDropdownState";
-
 export type DropdownActions =
   | {
       type: "SelectIndex";
@@ -15,5 +13,3 @@ export type DropdownActions =
   | "HighlightLastIndex"
   | "SelectHighlightedIndex"
   | "ClampIndexes";
-
-export type DropdownActionCreator = (state: DropdownState) => DropdownActions;

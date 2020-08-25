@@ -1,13 +1,6 @@
 import React from "react";
-import { useKeyPressListener } from "./hooks";
-import { useControlledState } from "./controlledState";
-import {
-  DropdownDispatch,
-  DropdownState,
-  useDropdownState,
-} from "./useDropdownState";
-import { keyboarDispatcher, reducer } from "./reducers";
-import { DropdownActions } from "./actions";
+import { DropdownDispatch } from "./Common/dispatch";
+import { DropdownActions } from "./Common/actions";
 
 //import "styles.css";
 
@@ -56,7 +49,7 @@ export const DropdownList = function DropdownList<T>(props: {
         <input
           style={{ width: "100%" }}
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
         ></input>
       </div>
       {/* <FixedSizeList
@@ -70,7 +63,7 @@ export const DropdownList = function DropdownList<T>(props: {
       </FixedSizeList> */}
       {props.options
         .filter(
-          (o) =>
+          o =>
             search === "" ||
             (o as any)
               .toString()
@@ -95,110 +88,4 @@ export const DropdownList = function DropdownList<T>(props: {
         ))}
     </div>
   );
-};
-
-DropdownList.whyDidYouRender = true;
-
-const options = ["A", "B", "C", "D", "E", "F", "G", "H"];
-
-// function SimpleTextDropdownF() {
-//   // const [isOpen, setIsOpen] = React.useState(true);
-//   const [highlightedIndex, setHighlightedIndex] = React.useState<number | null>(
-//     2
-//   );
-
-//   const dropdownRef = React.useRef(null);
-
-//   const onState = React.useCallback((changes: Partial<DropdownState>) => {
-//     if (changes.highlightedIndex !== undefined) {
-//       setHighlightedIndex(changes.highlightedIndex);
-//     }
-//     // if (changes.isOpen !== undefined) {
-//     //   setIsOpen(changes.isOpen);
-//     // }
-//   }, []);
-
-//   // const [fsef, aaaaa] = useControlledState(
-//   //   { a: "1", b: "2" },
-//   //   { a: "3", c: "5", f: 23 },
-//   //   (state: { a: string; b: string; c: string }, action: any) => state
-//   // );
-//   //  fsef.
-
-//   const customReducer = React.useCallback(
-//     (state: DropdownState, itemCount: number, action: MyActions) => {
-//       if (typeof action === "string" && action === "SelectFirstTwo") {
-//         return {
-//           ...state,
-//           selectedIndexes: [0, 1],
-//         };
-//       }
-
-//       return reducer(state, itemCount, action);
-//     },
-//     []
-//   );
-//   const [dropdownState, dispachtStat] = useDropdownState(
-//     options.length,
-//     {
-//       highlightedIndex,
-//     },
-
-//     onState,
-//     customReducer
-//   );
-
-//   //dropdownState.
-
-//   const keyboardDisdpatcher = React.useMemo(
-//     () => keyboarDispatcher(dispachtStat),
-//     [dispachtStat]
-//   );
-
-//   useKeyPressListener(dropdownRef.current, () => {
-//     console.log("cckk");
-//   });
-
-//   console.log("rendering SimpleTextDropdown2");
-
-//   return (
-//     <div>
-//       <div>before2</div>
-//       <button onClick={() => dispachtStat(["SelectFirstTwo"])}>
-//         Select first two
-//       </button>
-//       <div ref={dropdownRef} className="dropdown">
-//         <DropdownButton
-//           {...dropdownState}
-//           dispatch={dispachtStat}
-//           //isOpen={isOpen}
-//           options={options}
-//         ></DropdownButton>
-//         {dropdownState.isOpen && (
-//           <DropdownList
-//             {...dropdownState}
-//             highlightedIndex={highlightedIndex}
-//             dispatch={dispachtStat}
-//             options={options}
-//           ></DropdownList>
-//         )}
-//       </div>
-//       <div>after</div>
-//     </div>
-//   );
-// }
-// SimpleTextDropdownF.whyDidYouRender = true;
-// export const SimpleTextDropdown = React.memo(SimpleTextDropdownF);
-
-export const RemoteSearchDropdown = () => {};
-
-export type RemoteSearchRequest = {
-  itemsOffset: number;
-  itemsPageSize: number;
-  search: string;
-};
-
-export type RemoteSearchResult<T> = {
-  items: T[];
-  itemsCount: number;
 };
