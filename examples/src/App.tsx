@@ -5,6 +5,7 @@ import { DropdownSearch } from "./DropdownSearch";
 import { randomNames } from "./randomNames";
 import { DropdownChunkLoading } from "./DropdownChunkLoading";
 import { DropdownCustomNavigation } from "./DropdownCustomNavigation";
+import { DropdownControlledState } from "./DropdownControlledState";
 
 function App() {
   const options = randomNames;
@@ -23,7 +24,8 @@ function App() {
       <h4>Dropdown with search</h4>
       <DropdownSearch options={options}></DropdownSearch>
 
-      <h4>Dropdown with controlled state</h4>
+      <h4>Dropdown with fully controlled state</h4>
+      <DropdownControlledState options={options}></DropdownControlledState>
 
       <h4>Dropdown with lazy loaded chunks</h4>
       <DropdownChunkLoading
