@@ -1,11 +1,20 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
+import InfiniteLoader from "react-window-infinite-loader";
+import { hasProperty } from "../Common/helpers";
 
 export const useScrollToIndex = (
-  listElementRef: React.RefObject<FixedSizeList>,
+  elementRef: React.RefObject<FixedSizeList | InfiniteLoader>,
   index: number | null
 ) => {
   React.useEffect(() => {
-    if (index !== null) listElementRef.current?.scrollToItem(index, "smart");
+    if (index !== null && elementRef.current) {
+      const element = elementRef.current;
+      const scroller = hasProperty(element, "_listRef")
+        ? element._listRef
+        : element;
+
+      (scroller as FixedSizeList).scrollToItem(index, "smart");
+    }
   }, [index]);
 };

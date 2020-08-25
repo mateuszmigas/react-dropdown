@@ -46,7 +46,9 @@ export const DropdownChunkLoading = (props: {
         {...state}
         dispatch={dispatch}
         itemRenderer={() => (
-          <div>{selectedIndex !== null ? loadedItems[selectedIndex] : ""}</div>
+          <div>
+            {selectedIndex !== null ? loadedItems[selectedIndex].value : ""}
+          </div>
         )}
       ></DropdownMain>
       {state.isOpen && (
@@ -62,19 +64,15 @@ export const DropdownChunkLoading = (props: {
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
             maxHeight={200}
-            itemRenderer={(index, isLoaded) =>
-              !isLoaded ? (
-                <div>Loading..</div>
-              ) : (
-                <DropdownItem
-                  text={loadedItems[index].value ?? ""}
-                  index={index}
-                  isSelected={state.selectedIndexes.includes(index)}
-                  isHighlighted={state.highlightedIndex === index}
-                  dispatch={dispatch}
-                ></DropdownItem>
-              )
-            }
+            itemRenderer={(index, isLoaded) => (
+              <DropdownItem
+                text={isLoaded ? loadedItems[index].value : "Loading..."}
+                index={index}
+                isSelected={state.selectedIndexes.includes(index)}
+                isHighlighted={state.highlightedIndex === index}
+                dispatch={dispatch}
+              ></DropdownItem>
+            )}
           ></DropdownLazyLoadingList>
         </div>
       )}

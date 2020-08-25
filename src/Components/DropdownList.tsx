@@ -1,7 +1,6 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
 import { useScrollToIndex } from "../Hooks";
-import { AutoScrolllingVirtualizedList } from "./AutoScrolllingVirtualizedList";
 
 const memoizedRow = React.memo(function Row(props: {
   index: number;
@@ -38,20 +37,20 @@ export const DropdownList = (props: {
     [itemRenderer]
   );
 
-  const ref = React.useRef<FixedSizeList>(null);
+  const listRef = React.useRef<FixedSizeList>(null);
+  useScrollToIndex(listRef, props.highlightedIndex);
 
   return (
-    <AutoScrolllingVirtualizedList
+    <FixedSizeList
       className={className}
-      listRef={ref}
+      ref={listRef}
       height={height}
       itemCount={itemCount}
       itemSize={itemHeight}
-      highlightedIndex={props.highlightedIndex}
       width={"100%"}
       itemData={itemData}
     >
       {memoizedRow}
-    </AutoScrolllingVirtualizedList>
+    </FixedSizeList>
   );
 };

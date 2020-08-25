@@ -3,7 +3,7 @@ import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 
 export const DropdownItem = (props: {
-  text: string;
+  text: string | null;
   index: number;
   isSelected: boolean;
   isHighlighted: boolean;

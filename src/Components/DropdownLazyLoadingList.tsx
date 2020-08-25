@@ -1,7 +1,7 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
-import { AutoScrolllingVirtualizedList } from "./AutoScrolllingVirtualizedList";
 import InfiniteLoader from "react-window-infinite-loader";
+import { useScrollToIndex } from "../Hooks";
 
 const memoizedRow = React.memo(function Row(props: {
   index: number;
@@ -39,6 +39,7 @@ export const DropdownLazyLoadingList = (props: {
     itemRenderer,
     isItemLoaded,
     loadMoreItems,
+    highlightedIndex,
     className,
   } = props;
 
@@ -52,26 +53,29 @@ export const DropdownLazyLoadingList = (props: {
     [itemRenderer, isItemLoaded]
   );
 
+  const infiniteLoaderRef = React.useRef<FixedSizeList>(null);
+  useScrollToIndex(infiniteLoaderRef, highlightedIndex);
+
   return (
     <InfiniteLoader
+      ref={infiniteLoaderRef as any}
       isItemLoaded={isItemLoaded}
       itemCount={itemCount}
       loadMoreItems={loadMoreItems}
     >
       {({ onItemsRendered, ref }) => (
-        <AutoScrolllingVirtualizedList
+        <FixedSizeList
           className={className}
-          listRef={ref as React.RefObject<FixedSizeList>}
+          ref={ref}
           height={height}
           itemCount={itemCount}
           itemSize={itemHeight}
-          highlightedIndex={props.highlightedIndex}
           onItemsRendered={onItemsRendered}
           width={"100%"}
           itemData={itemData}
         >
           {memoizedRow}
-        </AutoScrolllingVirtualizedList>
+        </FixedSizeList>
       )}
     </InfiniteLoader>
   );

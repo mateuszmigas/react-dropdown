@@ -79,4 +79,11 @@ export const assertNever = (x: never): never => {
   throw new Error("Unexpected object: " + x);
 };
 
+export const hasProperty = <X extends {}, Y extends PropertyKey>(
+  obj: X,
+  prop: Y
+): obj is X & Record<Y, unknown> => {
+  return obj.hasOwnProperty(prop);
+};
+
 type Merge<T, U> = keyof (T | U) extends never ? T & U : never;
