@@ -86,6 +86,17 @@ export const reducer = (
           highlightedIndex: action.index,
         };
       }
+      case "ToggleSelectedIndex": {
+        return {
+          ...state,
+          selectedIndexes: state.selectedIndexes
+            .filter(i => i !== action.index)
+            .concat(
+              state.selectedIndexes.includes(action.index) ? [] : [action.index]
+            ),
+          highlightedIndex: action.index,
+        };
+      }
       case "HighlightIndex": {
         return {
           ...state,

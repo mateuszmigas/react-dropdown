@@ -3,6 +3,7 @@ export type DropdownActions =
       type: "SelectIndex";
       index: number;
     }
+  | { type: "ToggleSelectedIndex"; index: number }
   | "ClearSelection"
   | "OpenList"
   | "CloseList"

@@ -2,13 +2,13 @@ import React from "react";
 import {
   useFocusOnStateChange,
   useCloseDropdownWhenClickedOutside,
+  useDropdownListKeyboardHandler,
   useDropdownState,
   createListKeyboardHandler,
 } from "../../lib/Hooks";
-import { clamp } from "../../lib/Common/helpers";
 import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
 
-export const DropdownCustomNavigation = (props: { options: string[] }) => {
+export const DropdownMultipleSelection = (props: { options: string[] }) => {
   const { options } = props;
 
   const [state, dispatch] = useDropdownState(
@@ -16,9 +16,6 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
     {},
     { highlightedIndex: 0 }
   );
-
-  const selectedIndex =
-    state.selectedIndexes.length > 0 ? state.selectedIndexes[0] : null;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
@@ -31,27 +28,15 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
 
     const customHandler = (e: React.KeyboardEvent<Element>) => {
       switch (e.key) {
-        case "PageUp":
-          dispatch([
-            {
-              type: "HighlightIndex",
-              index:
-                state.highlightedIndex === null
-                  ? 0
-                  : clamp(state.highlightedIndex - 5, 0, options.length - 1),
-            },
-          ]);
-          break;
-        case "PageDown":
-          dispatch([
-            {
-              type: "HighlightIndex",
-              index:
-                state.highlightedIndex === null
-                  ? 0
-                  : clamp(state.highlightedIndex + 5, 0, options.length - 1),
-            },
-          ]);
+        case " ":
+          if (state.highlightedIndex !== null) {
+            dispatch([
+              {
+                type: "ToggleSelectedIndex",
+                index: state.highlightedIndex,
+              },
+            ]);
+          }
           break;
         default:
           defaultHandler(e);
@@ -67,7 +52,9 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
         {...state}
         dispatch={dispatch}
         itemRenderer={() => (
-          <div>{selectedIndex !== null ? options[selectedIndex] : ""}</div>
+          <div>
+            {state.selectedIndexes.map((i: number) => options[i]).join(",")}
+          </div>
         )}
       ></DropdownMain>
       {state.isOpen && (
@@ -81,7 +68,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
             itemCount={options.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
-            maxHeight={180}
+            maxHeight={200}
             itemRenderer={index => (
               <DropdownItem
                 text={options[index]}
