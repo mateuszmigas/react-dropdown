@@ -1,10 +1,10 @@
 import React from "react";
 import {
-  useListKeyboardHandler,
   useCloseDropdownWhenClickedOutside,
   useDropdownState,
   useFocusOnStateChange,
   useChunkLoader,
+  useDropdownListKeyboardHandler,
 } from "../../lib/Hooks";
 import {
   DropdownMain,
@@ -33,7 +33,7 @@ export const DropdownChunkLoading = (props: {
   useCloseDropdownWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
 
-  const listKeyboardHandler = useListKeyboardHandler(dispatch);
+  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
 
   const { loadedItems, ...listProsp } = useChunkLoader(
     itemCount,

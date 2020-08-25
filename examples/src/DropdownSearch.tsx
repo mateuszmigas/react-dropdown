@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  useListKeyboardHandler,
+  useDropdownListKeyboardHandler,
   useCloseDropdownWhenClickedOutside,
   useDropdownState,
   useFocusOnStateChange,
@@ -34,7 +34,7 @@ export const DropdownSearch = (props: { options: string[] }) => {
   useCloseDropdownWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(inputRef, state.isOpen, true);
 
-  const listKeyboardHandler = useListKeyboardHandler(dispatch);
+  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
 
   return (
     <div ref={containerRef} className="dropdown-container">

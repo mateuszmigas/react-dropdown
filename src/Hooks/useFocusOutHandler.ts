@@ -1,6 +1,6 @@
 import React from "react";
 
-export const useFocusOutListener = (
+export const useFocusOutHandler = (
   elementRef: React.RefObject<HTMLElement>,
   handler: () => void
 ) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { usePreviousValue } from "./common";
+import { usePreviousValue } from "./usePreviousValue";
 
 export const useFocusOnStateChange = <T>(
   elementRef: React.RefObject<HTMLElement>,

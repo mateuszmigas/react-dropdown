@@ -2,7 +2,7 @@ import React from "react";
 import { DropdownActions } from "../Common/actions";
 import { DropdownDispatch } from "../Common/dispatch";
 
-export const useListKeyboardHandler = (
+export const useDropdownListKeyboardHandler = (
   dispatch: DropdownDispatch<DropdownActions>
 ) => React.useMemo(() => createListKeyboardHandler(dispatch), [dispatch]);
 
@@ -30,6 +30,14 @@ export const createListKeyboardHandler = (
       e.preventDefault();
       dispatch(["HighlightPreviousIndex"]);
       break;
+    case "Home": {
+      dispatch(["HighlightFirstIndex"]);
+      break;
+    }
+    case "End": {
+      dispatch(["HighlightLastIndex"]);
+      break;
+    }
     default:
       return;
   }
