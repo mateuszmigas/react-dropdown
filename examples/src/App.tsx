@@ -7,6 +7,7 @@ import { DropdownChunkLoading } from "./DropdownChunkLoading";
 import { DropdownCustomNavigation } from "./DropdownCustomNavigation";
 import { DropdownControlledState } from "./DropdownControlledState";
 import { DropdownMultipleSelection } from "./DropdownMultipleSelection";
+import { DropdownCustomActions } from "./DropdownCustomActions";
 
 function App() {
   const options = randomNames;
@@ -25,7 +26,7 @@ function App() {
       <h4>Dropdown with search</h4>
       <DropdownSearch options={options}></DropdownSearch>
 
-      <h4>Dropdown with fully fully controlled state</h4>
+      <h4>Dropdown with fully controlled state</h4>
       <DropdownControlledState options={options}></DropdownControlledState>
 
       <h4>Dropdown with lazy loaded chunks</h4>
@@ -34,13 +35,14 @@ function App() {
         fetchItemsChunk={fetchChunk}
       ></DropdownChunkLoading>
 
-      <h4>Dropdown with multiple selection</h4>
+      <h4>Dropdown with multiple selection (Space)</h4>
       <DropdownMultipleSelection options={options}></DropdownMultipleSelection>
 
       <h4>Dropdown with custom navigation (Page up/down)</h4>
       <DropdownCustomNavigation options={options}></DropdownCustomNavigation>
 
       <h4>Dropdown with custom actions</h4>
+      <DropdownCustomActions options={options}></DropdownCustomActions>
     </div>
   );
 }

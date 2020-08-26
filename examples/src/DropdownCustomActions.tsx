@@ -2,19 +2,43 @@ import React from "react";
 import {
   useFocusOnStateChange,
   useCloseDropdownWhenClickedOutside,
+  useDropdownListKeyboardHandler,
   useDropdownState,
-  createListKeyboardHandler,
 } from "../../lib/Hooks";
-import { clamp } from "../../lib/Common/helpers";
 import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
+import { DropdownActions } from "../../lib/Common/actions";
+import { DropdownState } from "../../lib/Common/state";
+import { reducer as defaultReducer } from "../../lib/Common/reducer";
 
-export const DropdownCustomNavigation = (props: { options: string[] }) => {
+type CustomDropdownActions = "SelectSecondItem" | DropdownActions;
+
+export const DropdownCustomActions = (props: { options: string[] }) => {
   const { options } = props;
+  const itemCount = options.length;
 
-  const [state, dispatch] = useDropdownState(
-    options.length,
+  const customReducer = React.useCallback(
+    (
+      state: DropdownState,
+      itemCount: number,
+      action: CustomDropdownActions
+    ) => {
+      if (action === "SelectSecondItem") {
+        return {
+          ...state,
+          selectedIndexes: [1],
+        };
+      }
+
+      return defaultReducer(state, itemCount, action);
+    },
+    []
+  );
+  const [state, dispatch] = useDropdownState<CustomDropdownActions, {}>(
+    itemCount,
     {},
-    { highlightedIndex: 0 }
+    { highlightedIndex: 0 },
+    () => {},
+    customReducer
   );
 
   const selectedIndex =
@@ -26,45 +50,13 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
   useCloseDropdownWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
 
-  const listKeyboardHandler = React.useMemo(() => {
-    const defaultHandler = createListKeyboardHandler(dispatch);
-
-    const customHandler = (e: React.KeyboardEvent<Element>) => {
-      switch (e.key) {
-        case "PageUp":
-          e.preventDefault();
-          dispatch([
-            {
-              type: "HighlightIndex",
-              index:
-                state.highlightedIndex === null
-                  ? 0
-                  : clamp(state.highlightedIndex - 5, 0, options.length - 1),
-            },
-          ]);
-          break;
-        case "PageDown":
-          e.preventDefault();
-          dispatch([
-            {
-              type: "HighlightIndex",
-              index:
-                state.highlightedIndex === null
-                  ? 0
-                  : clamp(state.highlightedIndex + 5, 0, options.length - 1),
-            },
-          ]);
-          break;
-        default:
-          defaultHandler(e);
-      }
-    };
-
-    return customHandler;
-  }, [state.highlightedIndex, options.length, dispatch]);
+  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
 
   return (
     <div ref={containerRef} className="dropdown-container">
+      <button onClick={() => dispatch(["SelectSecondItem"])}>
+        Select second item
+      </button>
       <DropdownMain
         {...state}
         dispatch={dispatch}
@@ -80,10 +72,10 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
           tabIndex={0}
         >
           <DropdownList
-            itemCount={options.length}
+            itemCount={itemCount}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
-            maxHeight={180}
+            maxHeight={200}
             itemRenderer={index => (
               <DropdownItem
                 text={options[index]}
