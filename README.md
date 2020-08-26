@@ -1,12 +1,28 @@
-# TODO
-grid
+# Dropdown
+
+This is set of utilities and components for creating dropdown control. Check examples for how to build your own dropdown with provided tools.
+
+## Installation
+
+Comming soon...
+
+## Development
 
 ```js
-//install
-dropdown/yarn
-dropdown/examples/yarn
+dropdown/yarn;
+dropdown/examples/yarn;
+```
 
-//run
+```js
 dropdown/yarn run watch
 dropdown/examples/yarn start
 ```
+
+## Work in progress
+
+- Better css (css grid)
+- Check tree-shaking
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
