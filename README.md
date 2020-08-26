@@ -1,13 +1,12 @@
 # TODO
-
-Changing itemsCount should reinitiate state
-Debounce on remote
-Use Css grid
+grid
 
 ```js
+//install
 dropdown/yarn
 dropdown/examples/yarn
 
+//run
 dropdown/yarn run watch
 dropdown/examples/yarn start
 ```
