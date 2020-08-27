@@ -9,8 +9,13 @@ Comming soon...
 ## Development
 
 ```js
+<<<<<<< HEAD
+dropdown / yarn;
+dropdown / examples / yarn;
+=======
 dropdown/yarn;
 dropdown/examples/yarn;
+>>>>>>> 7b99e2ef09a34ad0dfbda35f9e2807146daa15b2
 ```
 
 ```js
