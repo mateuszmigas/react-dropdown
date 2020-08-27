@@ -64,16 +64,6 @@ export const reducer = (
           highlightedIndex: itemCount > 0 ? 0 : null,
         };
       }
-      case "ClampIndexes": {
-        return {
-          ...state,
-          highlightedIndex:
-            state.highlightedIndex === null ||
-            state.highlightedIndex < itemCount
-              ? state.highlightedIndex
-              : itemCount - 1,
-        };
-      }
       default:
         return assertNever(action);
     }

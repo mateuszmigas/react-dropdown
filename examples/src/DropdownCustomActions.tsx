@@ -1,14 +1,16 @@
 import React from "react";
 import {
   useFocusOnStateChange,
-  useCloseDropdownWhenClickedOutside,
-  useDropdownListKeyboardHandler,
+  useDropdownCloseWhenClickedOutside,
+  useDropdownListKeyboardNavigator,
   useDropdownState,
 } from "../../lib/Hooks";
-import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
 import { DropdownActions } from "../../lib/Common/actions";
 import { DropdownState } from "../../lib/Common/state";
 import { reducer as defaultReducer } from "../../lib/Common/reducer";
+import { DropdownMain } from "./DropdownMain";
+import { VirtualizedList } from "../../lib/Components";
+import { DropdownItem } from "./DropdownItem";
 
 type CustomDropdownActions = "SelectSecondItem" | DropdownActions;
 
@@ -47,10 +49,10 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
+  useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
 
-  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
+  const listKeyboardHandler = useDropdownListKeyboardNavigator(dispatch);
 
   return (
     <div ref={containerRef} className="dropdown-container">
@@ -71,7 +73,7 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownList
+          <VirtualizedList
             itemCount={itemCount}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
@@ -85,7 +87,7 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
                 dispatch={dispatch}
               ></DropdownItem>
             )}
-          ></DropdownList>
+          ></VirtualizedList>
         </div>
       )}
     </div>

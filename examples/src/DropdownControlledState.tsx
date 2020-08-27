@@ -1,11 +1,13 @@
 import React from "react";
 import {
   useFocusOnStateChange,
-  useCloseDropdownWhenClickedOutside,
-  useDropdownListKeyboardHandler,
+  useDropdownCloseWhenClickedOutside,
+  useDropdownListKeyboardNavigator,
   useDropdownState,
 } from "../../lib/Hooks";
-import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
+import { DropdownMain } from "./DropdownMain";
+import { VirtualizedList } from "../../lib/Components";
+import { DropdownItem } from "./DropdownItem";
 
 export const DropdownControlledState = (props: { options: string[] }) => {
   const { options } = props;
@@ -40,10 +42,10 @@ export const DropdownControlledState = (props: { options: string[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
+  useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, isOpen, true);
 
-  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
+  const listKeyboardHandler = useDropdownListKeyboardNavigator(dispatch);
 
   return (
     <div ref={containerRef} className="dropdown-container">
@@ -61,7 +63,7 @@ export const DropdownControlledState = (props: { options: string[] }) => {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownList
+          <VirtualizedList
             itemCount={options.length}
             itemHeight={30}
             highlightedIndex={highlightedIndex}
@@ -75,7 +77,7 @@ export const DropdownControlledState = (props: { options: string[] }) => {
                 dispatch={dispatch}
               ></DropdownItem>
             )}
-          ></DropdownList>
+          ></VirtualizedList>
         </div>
       )}
     </div>

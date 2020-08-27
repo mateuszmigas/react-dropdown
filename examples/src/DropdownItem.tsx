@@ -1,6 +1,6 @@
 import React from "react";
-import { DropdownDispatch } from "../Common/dispatch";
-import { DropdownActions } from "../Common/actions";
+import { DropdownDispatch } from "../../lib/Common/dispatch";
+import { DropdownActions } from "../../lib/Common/actions";
 
 export const DropdownItem = (props: {
   text: string | null;

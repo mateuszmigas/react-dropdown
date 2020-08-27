@@ -3,7 +3,7 @@ import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 import { useFocusOutHandler } from "./useFocusOutHandler";
 
-export const useCloseDropdownWhenFocusOut = (
+export const useDropdownCloseWhenFocusOut = (
   elementRef: React.RefObject<HTMLElement>,
   dispatch: DropdownDispatch<DropdownActions>
 ) => {

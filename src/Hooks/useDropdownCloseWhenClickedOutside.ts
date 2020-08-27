@@ -1,9 +1,9 @@
 import React from "react";
-import { useClickOutsideHandler } from ".";
+import { useClickedOutsideHandler } from ".";
 import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 
-export const useCloseDropdownWhenClickedOutside = (
+export const useDropdownCloseWhenClickedOutside = (
   elementRef: React.RefObject<HTMLElement>,
   dispatch: DropdownDispatch<DropdownActions>
 ) => {
@@ -11,5 +11,5 @@ export const useCloseDropdownWhenClickedOutside = (
     dispatch,
   ]);
 
-  useClickOutsideHandler(elementRef, clickHandler);
+  useClickedOutsideHandler(elementRef, clickHandler);
 };

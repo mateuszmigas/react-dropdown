@@ -1,12 +1,7 @@
-import React from "react";
-import { DropdownActions } from "../Common/actions";
-import { DropdownDispatch } from "../Common/dispatch";
+import { DropdownActions } from "./actions";
+import { DropdownDispatch } from "./dispatch";
 
-export const useDropdownListKeyboardHandler = (
-  dispatch: DropdownDispatch<DropdownActions>
-) => React.useMemo(() => createListKeyboardHandler(dispatch), [dispatch]);
-
-export const createListKeyboardHandler = (
+export const createListKeyboardNavigator = (
   dispatch: DropdownDispatch<DropdownActions>
 ) => (e: React.KeyboardEvent<Element>) => {
   switch (e.key) {

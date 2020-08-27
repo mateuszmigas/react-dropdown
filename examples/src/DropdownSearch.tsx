@@ -1,12 +1,14 @@
 import React from "react";
 import {
-  useDropdownListKeyboardHandler,
-  useCloseDropdownWhenClickedOutside,
+  useDropdownListKeyboardNavigator,
+  useDropdownCloseWhenClickedOutside,
   useDropdownState,
   useFocusOnStateChange,
 } from "../../lib/Hooks";
 import { DropdownState } from "../../lib/Common/state";
-import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
+import { DropdownMain } from "./DropdownMain";
+import { VirtualizedList } from "../../lib/Components";
+import { DropdownItem } from "./DropdownItem";
 
 export const DropdownSearch = (props: { options: string[] }) => {
   const [query, setQuery] = React.useState("");
@@ -31,10 +33,10 @@ export const DropdownSearch = (props: { options: string[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const inputRef = React.useRef<HTMLInputElement>(null);
 
-  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
+  useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(inputRef, state.isOpen, true);
 
-  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
+  const listKeyboardHandler = useDropdownListKeyboardNavigator(dispatch);
 
   return (
     <div ref={containerRef} className="dropdown-container">
@@ -50,7 +52,7 @@ export const DropdownSearch = (props: { options: string[] }) => {
             value={query}
             onChange={e => setQuery(e.target.value)}
           ></input>
-          <DropdownList
+          <VirtualizedList
             itemCount={filteredOptions.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
@@ -64,7 +66,7 @@ export const DropdownSearch = (props: { options: string[] }) => {
                 dispatch={dispatch}
               ></DropdownItem>
             )}
-          ></DropdownList>
+          ></VirtualizedList>
         </div>
       )}
     </div>

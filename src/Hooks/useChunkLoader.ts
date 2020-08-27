@@ -18,11 +18,11 @@ export const useChunkLoader = <T>(
   );
 
   const loadMoreItems = React.useCallback(
-    (startIndex: number, stopIndex: number) =>
-      load(startIndex, stopIndex).then(newItems => {
+    (startIndex: number, endIndex: number) =>
+      load(startIndex, endIndex).then(newItems => {
         for (
           let itemsIndex = startIndex, index = 0;
-          itemsIndex <= stopIndex;
+          itemsIndex <= endIndex;
           itemsIndex++, index++
         ) {
           loadedItems[itemsIndex] = {

@@ -1,4 +1,4 @@
-export function overlapDefinedProps(target: any, ...sources: any[]) {
+export const overlapDefinedProps = (target: any, ...sources: any[]) => {
   let result: any = { ...target };
   for (const source of sources) {
     for (const key of Object.keys(source)) {
@@ -9,7 +9,7 @@ export function overlapDefinedProps(target: any, ...sources: any[]) {
     }
   }
   return result;
-}
+};
 
 export function overrideDefinedOnly<
   T1 extends { [key: string]: any },

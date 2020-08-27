@@ -1,7 +1,7 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
+import { useScrollListToIndex } from "../Hooks";
 import InfiniteLoader from "react-window-infinite-loader";
-import { useScrollToIndex } from "../Hooks";
 
 const memoizedRow = React.memo(function Row(props: {
   index: number;
@@ -20,23 +20,25 @@ const memoizedRow = React.memo(function Row(props: {
   return <div style={style}>{itemRenderer(index, isItemLoaded(index))}</div>;
 });
 
-export const DropdownLazyLoadingList = (props: {
+export const VirtualizedLazyLoadingList = (props: {
   itemCount: number;
   itemHeight: number;
   maxHeight: number;
-  isItemLoaded: (index: number) => boolean;
-  loadMoreItems: (startIndex: number, endIndex: number) => Promise<void>;
   itemRenderer: (index: number, isLoaded: boolean) => JSX.Element;
   highlightedIndex: number | null;
+  isItemLoaded: (index: number) => boolean;
+  loadMoreItems: (startIndex: number, endIndex: number) => Promise<void>;
+  width?: number | string;
   className?: string;
 }) => {
-  console.log("rendering DropdownLazyLoadingList");
+  console.log("rendering VirtualizedLoadingList");
 
   const {
     itemCount,
     itemHeight,
     maxHeight,
     itemRenderer,
+    width = "100%",
     isItemLoaded,
     loadMoreItems,
     highlightedIndex,
@@ -44,7 +46,6 @@ export const DropdownLazyLoadingList = (props: {
   } = props;
 
   const height = Math.min(itemCount * itemHeight, maxHeight);
-
   const itemData = React.useMemo(
     () => ({
       itemRenderer,
@@ -53,12 +54,12 @@ export const DropdownLazyLoadingList = (props: {
     [itemRenderer, isItemLoaded]
   );
 
-  const infiniteLoaderRef = React.useRef<FixedSizeList>(null);
-  useScrollToIndex(infiniteLoaderRef, highlightedIndex);
+  const loaderRef = React.useRef<InfiniteLoader>(null);
+  useScrollListToIndex(loaderRef, highlightedIndex);
 
   return (
     <InfiniteLoader
-      ref={infiniteLoaderRef as any}
+      ref={loaderRef}
       isItemLoaded={isItemLoaded}
       itemCount={itemCount}
       loadMoreItems={loadMoreItems}
@@ -71,7 +72,7 @@ export const DropdownLazyLoadingList = (props: {
           itemCount={itemCount}
           itemSize={itemHeight}
           onItemsRendered={onItemsRendered}
-          width={"100%"}
+          width={width}
           itemData={itemData}
         >
           {memoizedRow}

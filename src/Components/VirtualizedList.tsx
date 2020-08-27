@@ -1,6 +1,6 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
-import { useScrollToIndex } from "../Hooks";
+import { useScrollListToIndex } from "../Hooks";
 
 const memoizedRow = React.memo(function Row(props: {
   index: number;
@@ -18,17 +18,26 @@ const memoizedRow = React.memo(function Row(props: {
   return <div style={style}>{itemRenderer(index)}</div>;
 });
 
-export const DropdownList = (props: {
+export const VirtualizedList = (props: {
   itemCount: number;
   itemHeight: number;
   maxHeight: number;
   itemRenderer: (index: number) => JSX.Element;
   highlightedIndex: number | null;
+  width?: number | string;
   className?: string;
 }) => {
-  console.log("rendering DropdownList");
+  console.log("rendering VirtualizedList");
 
-  const { itemCount, itemHeight, maxHeight, itemRenderer, className } = props;
+  const {
+    itemCount,
+    itemHeight,
+    maxHeight,
+    itemRenderer,
+    width = "100%",
+    className,
+  } = props;
+
   const height = Math.min(itemCount * itemHeight, maxHeight);
   const itemData = React.useMemo(
     () => ({
@@ -38,7 +47,7 @@ export const DropdownList = (props: {
   );
 
   const listRef = React.useRef<FixedSizeList>(null);
-  useScrollToIndex(listRef, props.highlightedIndex);
+  useScrollListToIndex(listRef, props.highlightedIndex);
 
   return (
     <FixedSizeList
@@ -47,7 +56,7 @@ export const DropdownList = (props: {
       height={height}
       itemCount={itemCount}
       itemSize={itemHeight}
-      width={"100%"}
+      width={width}
       itemData={itemData}
     >
       {memoizedRow}

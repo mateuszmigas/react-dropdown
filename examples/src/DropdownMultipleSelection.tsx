@@ -1,12 +1,13 @@
 import React from "react";
 import {
   useFocusOnStateChange,
-  useCloseDropdownWhenClickedOutside,
-  useDropdownListKeyboardHandler,
+  useDropdownCloseWhenClickedOutside,
   useDropdownState,
-  createListKeyboardHandler,
 } from "../../lib/Hooks";
-import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
+import { createListKeyboardNavigator } from "../../lib/Common/keyboardNavigator";
+import { DropdownMain } from "./DropdownMain";
+import { VirtualizedList } from "../../lib/Components";
+import { DropdownItem } from "./DropdownItem";
 
 export const DropdownMultipleSelection = (props: { options: string[] }) => {
   const { options } = props;
@@ -20,11 +21,11 @@ export const DropdownMultipleSelection = (props: { options: string[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
+  useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
 
   const listKeyboardHandler = React.useMemo(() => {
-    const defaultHandler = createListKeyboardHandler(dispatch);
+    const defaultHandler = createListKeyboardNavigator(dispatch);
 
     const customHandler = (e: React.KeyboardEvent<Element>) => {
       switch (e.key) {
@@ -44,7 +45,7 @@ export const DropdownMultipleSelection = (props: { options: string[] }) => {
     };
 
     return customHandler;
-  }, [state.highlightedIndex, options.length, dispatch]);
+  }, [state.highlightedIndex, dispatch]);
 
   return (
     <div ref={containerRef} className="dropdown-container">
@@ -64,7 +65,7 @@ export const DropdownMultipleSelection = (props: { options: string[] }) => {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownList
+          <VirtualizedList
             itemCount={options.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
@@ -78,7 +79,7 @@ export const DropdownMultipleSelection = (props: { options: string[] }) => {
                 dispatch={dispatch}
               ></DropdownItem>
             )}
-          ></DropdownList>
+          ></VirtualizedList>
         </div>
       )}
     </div>

@@ -12,5 +12,4 @@ export type DropdownActions =
   | "HighlightPreviousIndex"
   | "HighlightNextIndex"
   | "HighlightLastIndex"
-  | "SelectHighlightedIndex"
-  | "ClampIndexes";
+  | "SelectHighlightedIndex";

@@ -1,6 +1,6 @@
 import React from "react";
 
-export const useClickOutsideHandler = (
+export const useClickedOutsideHandler = (
   elementRef: React.RefObject<HTMLElement>,
   handler: () => void
 ) => {

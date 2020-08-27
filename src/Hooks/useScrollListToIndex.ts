@@ -3,7 +3,7 @@ import { FixedSizeList } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
 import { hasProperty } from "../Common/helpers";
 
-export const useScrollToIndex = (
+export const useScrollListToIndex = (
   elementRef: React.RefObject<FixedSizeList | InfiniteLoader>,
   index: number | null
 ) => {

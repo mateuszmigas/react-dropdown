@@ -1,12 +1,14 @@
 import React from "react";
+import { useDropdownState } from "../../lib/Hooks/useDropdownState";
 import {
   useFocusOnStateChange,
-  useCloseDropdownWhenClickedOutside,
-  useDropdownState,
-  createListKeyboardHandler,
+  useDropdownCloseWhenClickedOutside,
 } from "../../lib/Hooks";
+import { DropdownMain } from "./DropdownMain";
+import { DropdownItem } from "./DropdownItem";
+import { createListKeyboardNavigator } from "../../lib/Common/keyboardNavigator";
+import { VirtualizedList } from "../../lib/Components";
 import { clamp } from "../../lib/Common/helpers";
-import { DropdownMain, DropdownList, DropdownItem } from "../../lib/Components";
 
 export const DropdownCustomNavigation = (props: { options: string[] }) => {
   const { options } = props;
@@ -23,11 +25,11 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
+  useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
 
   const listKeyboardHandler = React.useMemo(() => {
-    const defaultHandler = createListKeyboardHandler(dispatch);
+    const defaultHandler = createListKeyboardNavigator(dispatch);
 
     const customHandler = (e: React.KeyboardEvent<Element>) => {
       switch (e.key) {
@@ -79,7 +81,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownList
+          <VirtualizedList
             itemCount={options.length}
             itemHeight={30}
             highlightedIndex={state.highlightedIndex}
@@ -93,7 +95,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
                 dispatch={dispatch}
               ></DropdownItem>
             )}
-          ></DropdownList>
+          ></VirtualizedList>
         </div>
       )}
     </div>

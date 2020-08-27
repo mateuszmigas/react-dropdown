@@ -1,16 +1,14 @@
 import React from "react";
 import {
-  useCloseDropdownWhenClickedOutside,
+  useDropdownCloseWhenClickedOutside,
   useDropdownState,
   useFocusOnStateChange,
+  useDropdownListKeyboardNavigator,
   useChunkLoader,
-  useDropdownListKeyboardHandler,
 } from "../../lib/Hooks";
-import {
-  DropdownMain,
-  DropdownItem,
-  DropdownLazyLoadingList,
-} from "../../lib/Components";
+import { DropdownMain } from "./DropdownMain";
+import { DropdownItem } from "./DropdownItem";
+import { VirtualizedLazyLoadingList } from "../../lib/Components/VirtualizedLazyLoadingList";
 
 export const DropdownChunkLoading = (props: {
   itemCount: number;
@@ -30,10 +28,10 @@ export const DropdownChunkLoading = (props: {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
-  useCloseDropdownWhenClickedOutside(containerRef, dispatch);
+  useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
 
-  const listKeyboardHandler = useDropdownListKeyboardHandler(dispatch);
+  const listKeyboardHandler = useDropdownListKeyboardNavigator(dispatch);
 
   const { loadedItems, ...listProsp } = useChunkLoader(
     itemCount,
@@ -58,7 +56,7 @@ export const DropdownChunkLoading = (props: {
           ref={listRef}
           tabIndex={0}
         >
-          <DropdownLazyLoadingList
+          <VirtualizedLazyLoadingList
             {...listProsp}
             itemCount={itemCount}
             itemHeight={30}
@@ -73,7 +71,7 @@ export const DropdownChunkLoading = (props: {
                 dispatch={dispatch}
               ></DropdownItem>
             )}
-          ></DropdownLazyLoadingList>
+          ></VirtualizedLazyLoadingList>
         </div>
       )}
     </div>
