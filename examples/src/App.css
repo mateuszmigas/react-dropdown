@@ -31,7 +31,7 @@
 }
 
 .dropdown-search {
-  width: 100%;
+  width: calc(100% - 4px);
   border: none;
   border-bottom: 1px solid;
 }
