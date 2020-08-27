@@ -1,13 +1,17 @@
 import React from "react";
-import "./styles.css";
+import "./App.css";
 import { DropdownSimple } from "./DropdownSimple";
 import { DropdownSearch } from "./DropdownSearch";
-import { randomNames } from "./randomNames";
 import { DropdownChunkLoading } from "./DropdownChunkLoading";
 import { DropdownCustomNavigation } from "./DropdownCustomNavigation";
 import { DropdownControlledState } from "./DropdownControlledState";
 import { DropdownMultipleSelection } from "./DropdownMultipleSelection";
 import { DropdownCustomActions } from "./DropdownCustomActions";
+
+import faker from "faker";
+export const randomNames = new Array(10000)
+  .fill({})
+  .map(() => `${faker.name.firstName()} ${faker.name.lastName()}`);
 
 function App() {
   const options = randomNames;

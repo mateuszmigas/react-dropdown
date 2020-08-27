@@ -34,6 +34,7 @@ export const DropdownSimple = (props: { options: string[] }) => {
       <DropdownMain
         {...state}
         dispatch={dispatch}
+        showClearButton={false}
         itemRenderer={() => (
           <div>{selectedIndex !== null ? options[selectedIndex] : ""}</div>
         )}

@@ -7,10 +7,11 @@ export const DropdownMain = (props: {
   isOpen: boolean;
   itemRenderer: () => JSX.Element;
   dispatch: DropdownDispatch<DropdownActions>;
+  showClearButton?: boolean;
 }) => {
   console.log("rendering DropdownMain");
 
-  const { isOpen, itemRenderer, dispatch } = props;
+  const { isOpen, itemRenderer, showClearButton = true, dispatch } = props;
   const dropdownSelectRef = React.useRef(null);
   const handleSelect = React.useCallback(
     () => dispatch([isOpen ? "CloseList" : "OpenList"]),
@@ -32,9 +33,11 @@ export const DropdownMain = (props: {
         {itemRenderer()}
         <i className={`fa ${isOpen ? "fa-caret-up" : "fa-caret-down"}`}></i>
       </button>
-      <button className="dropdown-clear" onClick={handleClear}>
-        <i className="fa fa-times"></i>
-      </button>
+      {showClearButton && (
+        <button className="dropdown-clear" onClick={handleClear}>
+          <i className="fa fa-times"></i>
+        </button>
+      )}
     </div>
   );
 };

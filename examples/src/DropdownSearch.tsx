@@ -48,6 +48,7 @@ export const DropdownSearch = (props: { options: string[] }) => {
       {state.isOpen && (
         <div className="dropdown-list" onKeyDown={listKeyboardHandler}>
           <input
+            className="dropdown-search"
             ref={inputRef}
             value={query}
             onChange={e => setQuery(e.target.value)}

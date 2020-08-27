@@ -12,7 +12,10 @@ import { DropdownMain } from "./DropdownMain";
 import { VirtualizedList } from "../../lib/Components";
 import { DropdownItem } from "./DropdownItem";
 
-type CustomDropdownActions = "SelectSecondItem" | DropdownActions;
+type CustomDropdownActions =
+  | "SelectSecondItem"
+  | { type: "NavigateToElement"; index: number }
+  | DropdownActions;
 
 export const DropdownCustomActions = (props: { options: string[] }) => {
   const { options } = props;
@@ -24,11 +27,20 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
       itemCount: number,
       action: CustomDropdownActions
     ) => {
-      if (action === "SelectSecondItem") {
-        return {
-          ...state,
-          selectedIndexes: [1],
-        };
+      if (typeof action === "string") {
+        if (action === "SelectSecondItem") {
+          return {
+            ...state,
+            selectedIndexes: [1],
+          };
+        }
+      } else {
+        if (action.type === "NavigateToElement") {
+          return {
+            ...state,
+            highlightedIndex: action.index,
+          };
+        }
       }
 
       return defaultReducer(state, itemCount, action);
@@ -58,6 +70,18 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
     <div ref={containerRef} className="dropdown-container">
       <button onClick={() => dispatch(["SelectSecondItem"])}>
         Select second item
+      </button>
+      <button
+        onClick={() =>
+          dispatch([
+            {
+              type: "NavigateToElement",
+              index: Math.floor(Math.random() * itemCount),
+            },
+          ])
+        }
+      >
+        Highlight random item
       </button>
       <DropdownMain
         {...state}
