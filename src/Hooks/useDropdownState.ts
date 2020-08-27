@@ -39,13 +39,12 @@ export const useDropdownState = <
     [itemCount, reducer]
   );
 
-  const initialInternalState = overlapDefinedProps(
-    defaultInitialState,
-    defaultInternalState
-  );
+  const initialInternalState = defaultInternalState
+    ? overlapDefinedProps(defaultInitialState, defaultInternalState)
+    : defaultInitialState;
 
   return useControlledState(
-    initialInternalState,
+    initialInternalState as InternalState,
     externalState,
     stateReducer,
     onChange

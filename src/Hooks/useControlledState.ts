@@ -29,10 +29,10 @@ export const useControlledState = <
 
   const dispatch = React.useCallback(
     (actions: Action[]) => {
-      const oldState: State = overlapDefinedProps(
+      const oldState = overlapDefinedProps(
         internalStateRef.current,
         externalState
-      );
+      ) as State;
       const newState = actions.reduce(reducer, {
         ...oldState,
       });
@@ -43,14 +43,6 @@ export const useControlledState = <
       ) as InternalState;
 
       if (!areShallowEqual(internalStateRef.current, newInternalState)) {
-        // console.log("changed", {
-        //   oldState: oldState,
-        //   newState,
-        //   oldInternalState: internalStateRef.current,
-        //   newInternalState,
-        //   changed: changes,
-        // });
-
         internalStateRef.current = newInternalState;
         setInternalState(internalStateRef.current);
       }

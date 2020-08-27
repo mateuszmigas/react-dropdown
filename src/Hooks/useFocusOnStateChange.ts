@@ -15,7 +15,8 @@ export const useFocusOnStateChange = <T>(
       state === valueToTrigger &&
       !initialRender.current
     ) {
-      if (elementRef.current !== null) (elementRef.current as any).focus();
+      if (elementRef.current !== null)
+        (elementRef.current as { focus: () => void }).focus();
     }
 
     initialRender.current = false;

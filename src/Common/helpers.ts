@@ -1,21 +1,9 @@
-export const overlapDefinedProps = (target: any, ...sources: any[]) => {
-  let result: any = { ...target };
-  for (const source of sources) {
-    for (const key of Object.keys(source)) {
-      const val = source[key];
-      if (val !== undefined) {
-        result[key] = val;
-      }
-    }
-  }
-  return result;
-};
-
-export function overrideDefinedOnly<
-  T1 extends { [key: string]: any },
-  T2 extends { [key: string]: any }
->(first: T1, second: T2): T1 & T2 {
-  let result: { [key: string]: any } = { ...first };
+export function overlapDefinedProps<
+  TResult,
+  T1 extends { [key: string]: unknown },
+  T2 extends { [key: string]: unknown }
+>(first: T1, second: T2): TResult {
+  let result: { [key: string]: unknown } = { ...first };
 
   for (const key of Object.keys(second)) {
     const val = second[key];
@@ -23,7 +11,7 @@ export function overrideDefinedOnly<
       result[key] = val;
     }
   }
-  return result as T1 & T2;
+  return (result as unknown) as TResult;
 }
 
 export const omitKeys = <S extends {}>(obj: S, keys: string[]): Partial<S> => {
@@ -85,5 +73,3 @@ export const hasProperty = <X extends {}, Y extends PropertyKey>(
 ): obj is X & Record<Y, unknown> => {
   return obj.hasOwnProperty(prop);
 };
-
-type Merge<T, U> = keyof (T | U) extends never ? T & U : never;
