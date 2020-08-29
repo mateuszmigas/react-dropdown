@@ -65,7 +65,7 @@ export const DropdownControlledState = (props: { options: string[] }) => {
         >
           <VirtualizedList
             itemCount={options.length}
-            itemHeight={30}
+            itemHeight={25}
             highlightedIndex={highlightedIndex}
             maxHeight={200}
             itemRenderer={index => (

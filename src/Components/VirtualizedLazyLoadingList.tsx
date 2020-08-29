@@ -20,7 +20,7 @@ const memoizedRow = React.memo(function Row(props: {
   return <div style={style}>{itemRenderer(index, isItemLoaded(index))}</div>;
 });
 
-export const VirtualizedLazyLoadingList = (props: {
+export function VirtualizedLazyLoadingList(props: {
   itemCount: number;
   itemHeight: number;
   maxHeight: number;
@@ -30,7 +30,7 @@ export const VirtualizedLazyLoadingList = (props: {
   loadMoreItems: (startIndex: number, endIndex: number) => Promise<void>;
   width?: number | string;
   className?: string;
-}) => {
+}) {
   console.log("rendering VirtualizedLoadingList");
 
   const {
@@ -80,4 +80,4 @@ export const VirtualizedLazyLoadingList = (props: {
       )}
     </InfiniteLoader>
   );
-};
+}

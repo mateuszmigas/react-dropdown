@@ -59,7 +59,7 @@ export const DropdownChunkLoading = (props: {
           <VirtualizedLazyLoadingList
             {...listProsp}
             itemCount={itemCount}
-            itemHeight={30}
+            itemHeight={25}
             highlightedIndex={state.highlightedIndex}
             maxHeight={200}
             itemRenderer={(index, isLoaded) => (

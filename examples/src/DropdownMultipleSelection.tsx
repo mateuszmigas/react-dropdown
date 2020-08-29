@@ -67,7 +67,7 @@ export const DropdownMultipleSelection = (props: { options: string[] }) => {
         >
           <VirtualizedList
             itemCount={options.length}
-            itemHeight={30}
+            itemHeight={25}
             highlightedIndex={state.highlightedIndex}
             maxHeight={200}
             itemRenderer={index => (

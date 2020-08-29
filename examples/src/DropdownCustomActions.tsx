@@ -99,7 +99,7 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
         >
           <VirtualizedList
             itemCount={itemCount}
-            itemHeight={30}
+            itemHeight={25}
             highlightedIndex={state.highlightedIndex}
             maxHeight={200}
             itemRenderer={index => (

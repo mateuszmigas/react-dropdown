@@ -45,7 +45,13 @@
 }
 
 .dropdown-list-item {
-  margin: 5px;
+  height: 25px;
+  display: flex;
+}
+
+.dropdown-list-item-text {
+  margin: 4px 4px 4px 8px;
+  font-size: 14px;
   user-select: none;
 }
 

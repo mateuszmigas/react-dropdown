@@ -2,7 +2,7 @@ import React from "react";
 import { FixedSizeList } from "react-window";
 import { useScrollListToIndex } from "../Hooks";
 
-const memoizedRow = React.memo(function Row(props: {
+const memoizedRow = React.memo(function ListRow(props: {
   index: number;
   style: React.CSSProperties;
   data: {
@@ -18,7 +18,7 @@ const memoizedRow = React.memo(function Row(props: {
   return <div style={style}>{itemRenderer(index)}</div>;
 });
 
-export const VirtualizedList = (props: {
+export function VirtualizedList(props: {
   itemCount: number;
   itemHeight: number;
   maxHeight: number;
@@ -26,7 +26,7 @@ export const VirtualizedList = (props: {
   highlightedIndex: number | null;
   width?: number | string;
   className?: string;
-}) => {
+}) {
   console.log("rendering VirtualizedList");
 
   const {
@@ -62,4 +62,4 @@ export const VirtualizedList = (props: {
       {memoizedRow}
     </FixedSizeList>
   );
-};
+}

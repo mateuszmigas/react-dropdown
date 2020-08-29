@@ -83,7 +83,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
         >
           <VirtualizedList
             itemCount={options.length}
-            itemHeight={30}
+            itemHeight={25}
             highlightedIndex={state.highlightedIndex}
             maxHeight={180}
             itemRenderer={index => (

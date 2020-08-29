@@ -20,7 +20,7 @@ export const DropdownItem = (props: {
       onClick={() => dispatch([{ type: "SelectIndex", index }])}
       className={style}
     >
-      {text}
+      <div className="dropdown-list-item-text">{text}</div>
     </div>
   );
 };

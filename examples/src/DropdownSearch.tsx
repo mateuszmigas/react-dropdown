@@ -55,7 +55,7 @@ export const DropdownSearch = (props: { options: string[] }) => {
           ></input>
           <VirtualizedList
             itemCount={filteredOptions.length}
-            itemHeight={30}
+            itemHeight={25}
             highlightedIndex={state.highlightedIndex}
             maxHeight={105}
             itemRenderer={index => (
