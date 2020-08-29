@@ -1,14 +1,13 @@
 import React from "react";
-import { useDropdownState } from "../../lib/Hooks/useDropdownState";
 import {
   useFocusOnStateChange,
   useDropdownCloseWhenClickedOutside,
-} from "../../lib/Hooks";
+  useDropdownState,
+  createListKeyboardNavigator,
+  VirtualizedList,
+} from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
 import { DropdownItem } from "./DropdownItem";
-import { createListKeyboardNavigator } from "../../lib/Common/keyboardNavigator";
-import { VirtualizedList } from "../../lib/Components";
-import { clamp } from "../../lib/Common/helpers";
 
 export const DropdownCustomNavigation = (props: { options: string[] }) => {
   const { options } = props;
@@ -38,10 +37,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
           dispatch([
             {
               type: "HighlightIndex",
-              index:
-                state.highlightedIndex === null
-                  ? 0
-                  : clamp(state.highlightedIndex - 5, 0, options.length - 1),
+              index: (state.highlightedIndex ?? 0) - 5,
             },
           ]);
           break;
@@ -50,10 +46,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
           dispatch([
             {
               type: "HighlightIndex",
-              index:
-                state.highlightedIndex === null
-                  ? 0
-                  : clamp(state.highlightedIndex + 5, 0, options.length - 1),
+              index: (state.highlightedIndex ?? 0) + 5,
             },
           ]);
           break;

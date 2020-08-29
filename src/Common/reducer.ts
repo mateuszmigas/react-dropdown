@@ -1,5 +1,5 @@
 import { DropdownActions } from "./actions";
-import { increaseIndex, assertNever } from "./helpers";
+import { increaseIndex, assertNever, clamp } from "./helpers";
 import { DropdownState } from "./state";
 
 export const reducer = (
@@ -90,7 +90,10 @@ export const reducer = (
       case "HighlightIndex": {
         return {
           ...state,
-          highlightedIndex: action.index,
+          highlightedIndex:
+            action.index === null
+              ? action.index
+              : clamp(action.index, 0, itemCount - 1),
         };
       }
       default:

@@ -5,10 +5,10 @@ import {
   useFocusOnStateChange,
   useDropdownListKeyboardNavigator,
   useChunkLoader,
-} from "../../lib/Hooks";
+  VirtualizedLazyLoadingList,
+} from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
 import { DropdownItem } from "./DropdownItem";
-import { VirtualizedLazyLoadingList } from "../../lib/Components/VirtualizedLazyLoadingList";
 
 export const DropdownChunkLoading = (props: {
   itemCount: number;

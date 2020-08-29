@@ -3,10 +3,10 @@ import {
   useFocusOnStateChange,
   useDropdownCloseWhenClickedOutside,
   useDropdownState,
-} from "../../lib/Hooks";
-import { createListKeyboardNavigator } from "../../lib/Common/keyboardNavigator";
+  createListKeyboardNavigator,
+  VirtualizedList,
+} from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
-import { VirtualizedList } from "../../lib/Components";
 import { DropdownItem } from "./DropdownItem";
 
 export const DropdownMultipleSelection = (props: { options: string[] }) => {

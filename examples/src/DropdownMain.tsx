@@ -1,7 +1,9 @@
 import React from "react";
-import { DropdownDispatch } from "../../lib/Common/dispatch";
-import { DropdownActions } from "../../lib/Common/actions";
-import { useFocusOnStateChange } from "../../lib/Hooks";
+import {
+  DropdownDispatch,
+  DropdownActions,
+  useFocusOnStateChange,
+} from "./dropdown";
 
 export const DropdownMain = (props: {
   isOpen: boolean;

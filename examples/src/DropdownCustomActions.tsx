@@ -4,12 +4,12 @@ import {
   useDropdownCloseWhenClickedOutside,
   useDropdownListKeyboardNavigator,
   useDropdownState,
-} from "../../lib/Hooks";
-import { DropdownActions } from "../../lib/Common/actions";
-import { DropdownState } from "../../lib/Common/state";
-import { reducer as defaultReducer } from "../../lib/Common/reducer";
+  DropdownActions,
+  DropdownState,
+  reducer as defaultReducer,
+  VirtualizedList,
+} from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
-import { VirtualizedList } from "../../lib/Components";
 import { DropdownItem } from "./DropdownItem";
 
 type CustomDropdownActions =

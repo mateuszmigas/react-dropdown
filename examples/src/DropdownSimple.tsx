@@ -4,9 +4,9 @@ import {
   useDropdownCloseWhenClickedOutside,
   useDropdownListKeyboardNavigator,
   useDropdownState,
-} from "../../lib/Hooks";
+  VirtualizedList,
+} from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
-import { VirtualizedList } from "../../lib/Components";
 import { DropdownItem } from "./DropdownItem";
 
 export const DropdownSimple = (props: { options: string[] }) => {

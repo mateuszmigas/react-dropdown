@@ -4,10 +4,10 @@ import {
   useDropdownCloseWhenClickedOutside,
   useDropdownState,
   useFocusOnStateChange,
-} from "../../lib/Hooks";
-import { DropdownState } from "../../lib/Common/state";
+  DropdownState,
+  VirtualizedList,
+} from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
-import { VirtualizedList } from "../../lib/Components";
 import { DropdownItem } from "./DropdownItem";
 
 export const DropdownSearch = (props: { options: string[] }) => {
