@@ -1,16 +1,27 @@
-# Dropdown
+# React dropdown
 
-This is set of utilities and components for creating dropdown control. Check examples for how to build your own dropdown with provided tools.
+This project does not try to implement the ultimate dropdown that will solve all the problems because it's not possible. It provides a set of utilities for creating such dropdown with examples showing how to do so.
+
+## Features
+
+- controlled vs uncontrolled state - useDropdownState hook allows you to decide which part of the state you want to control. Check DropdownSimple vs DropdownControlledState
+- redux-like state management - it exposes predefined actions and reducer. Both can be changed/extended
+- VirtualizedList - a component that utilizes react-windows that will render only what's needed and reuse already rendered items
+- VirtualizedLazyLoadingList - covers all the functionality of VirtualizedList but allows for lazy loading chunks of items
+- Customizable:
+  - keyboard navigation
+  - mouse navigation
+  - focus management
 
 ## Installation
 
-Comming soon...
+Coming soon...
 
 ## Development
 
 ```js
-dropdown/yarn;
-dropdown/examples/yarn;
+dropdown / yarn;
+dropdown / examples / yarn;
 ```
 
 ```js
@@ -20,7 +31,6 @@ dropdown/examples/yarn start
 
 ## Work in progress
 
-- Better css (css grid)
 - Check tree-shaking
 
 ## License
