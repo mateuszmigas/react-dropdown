@@ -2,6 +2,8 @@
 
 This project does not try to implement the ultimate dropdown that will solve all the problems because it's not possible. It provides a set of utilities for creating such dropdown with examples showing how to do so.
 
+[Examples](https://codesandbox.io/s/agitated-saha-2pip8)
+
 ## Features
 
 - controlled vs uncontrolled state - useDropdownState hook allows you to decide which part of the state you want to control. Check DropdownSimple vs DropdownControlledState
