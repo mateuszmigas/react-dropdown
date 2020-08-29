@@ -6,8 +6,8 @@ This project does not try to implement the ultimate dropdown that will solve all
 
 - controlled vs uncontrolled state - useDropdownState hook allows you to decide which part of the state you want to control. Check DropdownSimple vs DropdownControlledState
 - redux-like state management - it exposes predefined actions and reducer. Both can be changed/extended
-- VirtualizedList - a component that utilizes react-windows that will render only what's needed and reuse already rendered items
-- VirtualizedLazyLoadingList - covers all the functionality of VirtualizedList but allows for lazy loading chunks of items
+- VirtualizedList - a component that uses [react-window](https://github.com/bvaughn/react-window) with item memoization that will render only what's needed and reuse already rendered items
+- VirtualizedLazyLoadingList - covers all the functionality of VirtualizedList but allows for lazy loading chunks of items. Uses: [react-window-infinite-loader](https://github.com/bvaughn/react-window-infinite-loader)
 - Customizable:
   - keyboard navigation
   - mouse navigation
