@@ -2,7 +2,7 @@
 
 This project does not try to implement the ultimate dropdown that will solve all the problems because it's not possible. It provides a set of utilities for creating such dropdown with examples showing how to do so.
 
-[Examples](https://codesandbox.io/s/agitated-saha-2pip8)
+[Examples](https://codesandbox.io/s/wonderful-elbakyan-0nmmd?file=/src/App.tsx)
 
 ## Features
 
