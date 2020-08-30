@@ -46,7 +46,11 @@ export const DropdownSearch = (props: { options: string[] }) => {
         itemRenderer={() => <div>{selectedItem}</div>}
       ></DropdownMain>
       {state.isOpen && (
-        <div className="dropdown-list" onKeyDown={listKeyboardHandler}>
+        <div
+          className="dropdown-list"
+          onKeyDown={listKeyboardHandler}
+          tabIndex={0}
+        >
           <input
             className="dropdown-search"
             ref={inputRef}
