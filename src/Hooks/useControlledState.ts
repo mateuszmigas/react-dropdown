@@ -17,14 +17,10 @@ export const useControlledState = <
   reducer: (state: State, action: Action) => State,
   onChange?: (changes: Partial<State>) => void
 ): [InternalState, (actions: Action[]) => void] => {
-  const newLocal = omitKeys(
-    initialInternalState,
-    Object.keys(externalState)
-  ) as InternalState;
   const [internalState, setInternalState] = React.useState<InternalState>(
-    newLocal
+    omitKeys(initialInternalState, Object.keys(externalState)) as InternalState
   );
-  //cannot use updater function
+  //cannot use updater function in setState so we have to preserve current state
   const internalStateRef = React.useRef<InternalState>(internalState);
 
   const dispatch = React.useCallback(

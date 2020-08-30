@@ -17,19 +17,13 @@ This project does not try to implement the ultimate dropdown that will solve all
 
 ## Installation
 
-`
-npm i @mateuszmigas/dropdown
-`
+`npm i @mateuszmigas/dropdown`
 
 or
 
-`
-yarn add @mateuszmigas/dropdown
-`
-
+`yarn add @mateuszmigas/dropdown`
 
 Check examples for the usage
-
 
 ## Development
 
@@ -46,7 +40,7 @@ dropdown/examples/yarn start
 ## Work in progress
 
 - Check tree-shaking
-- Profile and remove console.logs
+- Profile
 
 ## License
 

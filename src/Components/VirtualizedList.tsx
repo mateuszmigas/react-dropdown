@@ -27,8 +27,6 @@ export function VirtualizedList(props: {
   width?: number | string;
   className?: string;
 }) {
-  console.log("rendering VirtualizedList");
-
   const {
     itemCount,
     itemHeight,

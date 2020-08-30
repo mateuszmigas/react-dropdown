@@ -31,8 +31,6 @@ export function VirtualizedLazyLoadingList(props: {
   width?: number | string;
   className?: string;
 }) {
-  console.log("rendering VirtualizedLoadingList");
-
   const {
     itemCount,
     itemHeight,

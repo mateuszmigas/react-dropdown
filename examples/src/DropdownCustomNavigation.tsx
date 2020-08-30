@@ -56,7 +56,7 @@ export const DropdownCustomNavigation = (props: { options: string[] }) => {
     };
 
     return customHandler;
-  }, [state.highlightedIndex, options.length, dispatch]);
+  }, [state.highlightedIndex, dispatch]);
 
   return (
     <div ref={containerRef} className="dropdown-container">

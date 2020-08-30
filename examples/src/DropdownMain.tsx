@@ -11,8 +11,6 @@ export const DropdownMain = (props: {
   dispatch: DropdownDispatch<DropdownActions>;
   showClearButton?: boolean;
 }) => {
-  console.log("rendering DropdownMain");
-
   const { isOpen, itemRenderer, showClearButton = true, dispatch } = props;
   const dropdownSelectRef = React.useRef(null);
   const handleSelect = React.useCallback(
