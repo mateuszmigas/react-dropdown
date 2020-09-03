@@ -1,4 +1,4 @@
-export * from "./useControlledState";
+export * from "./useUnionState";
 export * from "./useDropdownState";
 export * from "./useScrollListToIndex";
 export * from "./useDropdownCloseWhenClickedOutside";

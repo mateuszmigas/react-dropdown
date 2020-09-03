@@ -5,14 +5,13 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
-    "lib/**/*",
-    "!lib/**/*.test.*"
+    "lib/**/*"
   ],
   "scripts": {
     "build": "tsc",
     "examples": "yarn --cwd examples start",
     "watch": "tsc --watch",
-    "test": "jest --config jestconfig.json"
+    "test": "jest --config jest.config.js"
   },
   "repository": {
     "type": "git",

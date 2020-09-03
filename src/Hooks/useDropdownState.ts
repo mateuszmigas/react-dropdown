@@ -4,7 +4,7 @@ import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 import { reducer } from "../Common/reducer";
 import { overlapDefinedProps } from "../Common/helpers";
-import { useControlledState } from "./useControlledState";
+import { useUnionState } from "./useUnionState";
 
 const defaultInitialState: Partial<DropdownState> = {
   selectedIndexes: [],
@@ -43,7 +43,7 @@ export const useDropdownState = <
     ? overlapDefinedProps(defaultInitialState, defaultInternalState)
     : defaultInitialState;
 
-  return useControlledState(
+  return useUnionState(
     initialInternalState as InternalState,
     externalState,
     stateReducer,

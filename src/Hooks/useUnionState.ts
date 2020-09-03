@@ -6,7 +6,7 @@ import {
   areShallowEqual,
 } from "../Common/helpers";
 
-export const useControlledState = <
+export const useUnionState = <
   Action,
   InternalState extends {},
   ExternalState extends {},
@@ -29,9 +29,12 @@ export const useControlledState = <
         internalStateRef.current,
         externalState
       ) as State;
-      const newState = actions.reduce(reducer, {
-        ...oldState,
-      });
+      const newState = actions.reduce(
+        (state, action) => reducer(state, action),
+        {
+          ...oldState,
+        }
+      );
       const changes = shallowDifference<State>(oldState, newState);
       const newInternalState = omitKeys(
         newState,
