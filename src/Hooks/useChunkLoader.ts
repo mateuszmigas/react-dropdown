@@ -30,8 +30,6 @@ export const useChunkLoader = <T>(
             isLoaded: true,
           };
         }
-
-        return items;
       }),
     [items]
   );
