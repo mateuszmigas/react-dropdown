@@ -33,10 +33,7 @@ export const DropdownChunkLoading = (props: {
 
   const listKeyboardHandler = useDropdownListKeyboardNavigator(dispatch);
 
-  const { loadedItems, ...listProsp } = useChunkLoader(
-    itemCount,
-    fetchItemsChunk
-  );
+  const { items, ...listProsp } = useChunkLoader(itemCount, fetchItemsChunk);
 
   return (
     <div ref={containerRef} className="dropdown-container">
@@ -44,9 +41,7 @@ export const DropdownChunkLoading = (props: {
         {...state}
         dispatch={dispatch}
         itemRenderer={() => (
-          <div>
-            {selectedIndex !== null ? loadedItems[selectedIndex].value : ""}
-          </div>
+          <div>{selectedIndex !== null ? items[selectedIndex].value : ""}</div>
         )}
       ></DropdownMain>
       {state.isOpen && (
@@ -64,7 +59,7 @@ export const DropdownChunkLoading = (props: {
             maxHeight={200}
             itemRenderer={(index, isLoaded) => (
               <DropdownItem
-                text={isLoaded ? loadedItems[index].value : "Loading..."}
+                text={isLoaded ? items[index].value : "Loading..."}
                 index={index}
                 isSelected={state.selectedIndexes.includes(index)}
                 isHighlighted={state.highlightedIndex === index}
