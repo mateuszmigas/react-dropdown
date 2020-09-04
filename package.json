@@ -1,6 +1,6 @@
 {
   "name": "@mateuszmigas/dropdown",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Generic react dropdown",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
