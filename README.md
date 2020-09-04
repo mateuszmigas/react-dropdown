@@ -17,6 +17,8 @@ This project does not try to implement the ultimate dropdown that will solve all
 
 ## Installation
 
+https://www.npmjs.com/package/@mateuszmigas/dropdown
+
 `npm i @mateuszmigas/dropdown`
 
 or
