@@ -1,6 +1,10 @@
 import { DropdownActions } from "./actions";
-import { increaseIndex, assertNever, clamp } from "./helpers";
+import { clamp } from "./helpers";
 import { DropdownState } from "./state";
+import { assertNever } from "./typeNarrowing";
+
+const moveIndex = (current: number, offset: number, max: number) =>
+  max > 0 ? clamp(current + offset, 0, max - 1) : null;
 
 export const reducer = (
   state: DropdownState,
@@ -29,7 +33,7 @@ export const reducer = (
           ...state,
           highlightedIndex:
             state.highlightedIndex != null
-              ? increaseIndex(state.highlightedIndex, itemCount, -1)
+              ? moveIndex(state.highlightedIndex, -1, itemCount)
               : 0,
         };
       }
@@ -38,7 +42,7 @@ export const reducer = (
           ...state,
           highlightedIndex:
             state.highlightedIndex != null
-              ? increaseIndex(state.highlightedIndex, itemCount, 1)
+              ? moveIndex(state.highlightedIndex, 1, itemCount)
               : 0,
         };
       }

@@ -1,7 +1,7 @@
 import React from "react";
 import {
-  overlapDefinedProps,
-  shallowDifference,
+  overrideDefinedPropsOnly,
+  overriddenProps,
   omitKeys,
   areShallowEqual,
 } from "../Common/helpers";
@@ -25,7 +25,7 @@ export const useUnionState = <
 
   const dispatch = React.useCallback(
     (actions: Action[]) => {
-      const oldState = overlapDefinedProps(
+      const oldState = overrideDefinedPropsOnly(
         internalStateRef.current,
         externalState
       ) as State;
@@ -35,7 +35,7 @@ export const useUnionState = <
           ...oldState,
         }
       );
-      const changes = shallowDifference<State>(oldState, newState);
+      const changes = overriddenProps<State>(oldState, newState);
       const newInternalState = omitKeys(
         newState,
         Object.keys(externalState)

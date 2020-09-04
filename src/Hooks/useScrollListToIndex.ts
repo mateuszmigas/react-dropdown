@@ -1,7 +1,7 @@
 import React from "react";
 import { FixedSizeList } from "react-window";
 import InfiniteLoader from "react-window-infinite-loader";
-import { hasProperty } from "../Common/helpers";
+import { hasProperty } from "../Common/typeNarrowing";
 
 export const useScrollListToIndex = (
   elementRef: React.RefObject<FixedSizeList | InfiniteLoader>,

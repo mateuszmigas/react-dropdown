@@ -3,7 +3,7 @@ import { DropdownState } from "../Common/state";
 import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 import { reducer } from "../Common/reducer";
-import { overlapDefinedProps } from "../Common/helpers";
+import { overrideDefinedPropsOnly } from "../Common/helpers";
 import { useUnionState } from "./useUnionState";
 
 const defaultInitialState: Partial<DropdownState> = {
@@ -40,7 +40,7 @@ export const useDropdownState = <
   );
 
   const initialInternalState = defaultInternalState
-    ? overlapDefinedProps(defaultInitialState, defaultInternalState)
+    ? overrideDefinedPropsOnly(defaultInitialState, defaultInternalState)
     : defaultInitialState;
 
   return useUnionState(
