@@ -4,7 +4,7 @@ export const useChunkLoader = <T>(
   itemCount: number,
   load: (startIndex: number, endIndex: number) => Promise<T[]>
 ) => {
-  const loadedItems: {
+  const items: {
     value: T | null;
     isLoaded: boolean;
   }[] = React.useMemo(
@@ -13,8 +13,8 @@ export const useChunkLoader = <T>(
   );
 
   const isItemLoaded = React.useCallback(
-    (index: number) => loadedItems[index].isLoaded,
-    [loadedItems]
+    (index: number) => items[index].isLoaded,
+    [items]
   );
 
   const loadMoreItems = React.useCallback(
@@ -25,17 +25,19 @@ export const useChunkLoader = <T>(
           itemsIndex <= endIndex;
           itemsIndex++, index++
         ) {
-          loadedItems[itemsIndex] = {
+          items[itemsIndex] = {
             value: newItems[index],
             isLoaded: true,
           };
         }
+
+        return items;
       }),
-    [loadedItems]
+    [items]
   );
 
   return {
-    loadedItems,
+    items,
     isItemLoaded,
     loadMoreItems,
   };

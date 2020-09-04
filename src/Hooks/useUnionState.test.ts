@@ -154,20 +154,4 @@ describe("useUnionState", () => {
 
     expect(dispatch1).not.toBe(dispatch2);
   });
-
-  test("batches state updates", () => {
-    const { result, rerender } = renderHook(
-      externalState =>
-        useUnionState({ age: 25 }, { ...externalState }, reducer),
-      {
-        initialProps: { firstName: "Zdzicho", lastName: "Kopacz" },
-      }
-    );
-
-    const [, dispatch1] = result.current;
-    rerender({ firstName: "Zdzicho", lastName: "Kopacz2" });
-    const [, dispatch2] = result.current;
-
-    expect(dispatch1).not.toBe(dispatch2);
-  });
 });

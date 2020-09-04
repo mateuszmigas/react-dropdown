@@ -1,3 +1,6 @@
+//TODO:
+//- move to common library
+//- add unit tests
 export function overlapDefinedProps<
   TResult,
   T1 extends { [key: string]: unknown },
