@@ -1,7 +1,7 @@
 {
-  "name": "@mateuszmigas/dropdown",
-  "version": "0.0.4",
-  "description": "Generic react dropdown",
+  "name": "@mateuszmigas/react-dropdown",
+  "version": "0.9.0",
+  "description": "React dropdown",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "files": [
@@ -15,15 +15,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mateuszmigas/dropdown.git"
+    "url": "git+https://github.com/mateuszmigas/react-dropdown.git"
   },
   "author": "Mateusz Migas",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mateuszmigas/dropdown/issues"
+    "url": "https://github.com/mateuszmigas/react-dropdown/issues"
   },
-  "homepage": "https://github.com/mateuszmigas/dropdown#readme",
+  "homepage": "https://github.com/mateuszmigas/react-dropdown#readme",
   "devDependencies": {
+    "@mateuszmigas/react-union-state": "^1.0.2",
     "@testing-library/react": "^10.4.9",
     "@testing-library/react-hooks": "^3.4.1",
     "@types/jest": "^26.0.10",

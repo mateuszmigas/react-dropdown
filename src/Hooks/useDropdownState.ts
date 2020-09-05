@@ -4,7 +4,7 @@ import { DropdownDispatch } from "../Common/dispatch";
 import { DropdownActions } from "../Common/actions";
 import { reducer } from "../Common/reducer";
 import { overrideDefinedPropsOnly } from "../Common/helpers";
-import { useUnionState } from "./useUnionState";
+import { useUnionState } from "@mateuszmigas/react-union-state";
 
 const defaultInitialState: Partial<DropdownState> = {
   selectedIndexes: [],

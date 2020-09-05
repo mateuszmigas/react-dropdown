@@ -483,6 +483,11 @@
     "@types/yargs" "^15.0.0"
     chalk "^4.0.0"
 
+"@mateuszmigas/react-union-state@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@mateuszmigas/react-union-state/-/react-union-state-1.0.2.tgz#72044653e6ed135ad85a1d24ceca369b4c6f3f8d"
+  integrity sha512-6WEdlC1p0KDiT+kfDyHmohwkeMApKcZq/o8h0z8UXu7ofbsgiRK6ilpSJWbC/ghmJOuadNCIsH6UUhu6p+4epQ==
+
 "@sinonjs/commons@^1.7.0":
   version "1.8.1"
   resolved "https://registry.yarnpkg.com/@sinonjs/commons/-/commons-1.8.1.tgz#e7df00f98a203324f6dc7cc606cad9d4a8ab2217"
