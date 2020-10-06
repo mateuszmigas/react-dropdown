@@ -2,7 +2,7 @@
 
 This project does not try to implement the ultimate dropdown that will solve all the problems because it's not possible. It provides a set of utilities for creating such dropdown with examples showing how to do so.
 
-[Examples](https://codesandbox.io/s/frosty-taussig-omq5g?file=/src/dropdown.ts)
+[Examples](https://codesandbox.io/s/frosty-taussig-omq5g)
 
 ## Features
 
