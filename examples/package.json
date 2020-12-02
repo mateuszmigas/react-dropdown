@@ -12,7 +12,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "faker": "^5.0.0",
-    "react-scripts": "3.4.3",
+    "react-scripts": "4.0.1",
     "typescript": "~3.7.2"
   },
   "scripts": {
@@ -41,5 +41,8 @@
     "@types/react-window": "^1.8.2",
     "react-app-rewired": "^2.1.6",
     "react-window": "^1.8.5"
+  },
+  "resolutions": {
+    "node-forge": "^0.10.0"
   }
 }

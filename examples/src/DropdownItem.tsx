@@ -16,7 +16,7 @@ export const DropdownItem = (props: {
   return (
     <div
       key={index}
-      onClick={() => dispatch([{ type: "SelectIndex", index }])}
+      onClick={() => dispatch([{ type: "SelectIndex", index }, "CloseList"])}
       className={style}
     >
       <div className="dropdown-list-item-text">{text}</div>
