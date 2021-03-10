@@ -17,11 +17,11 @@ This project does not try to implement the ultimate dropdown that will solve all
 
 ## Installation
 
-`npm i @mateuszmigas/dropdown`
+`npm i @mateuszmigas/react-dropdown`
 
 or
 
-`yarn add @mateuszmigas/dropdown`
+`yarn add @mateuszmigas/react-dropdown`
 
 Check examples for the usage
 
