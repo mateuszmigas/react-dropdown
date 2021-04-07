@@ -11,6 +11,7 @@ import {
 } from "./dropdown";
 import { DropdownMain } from "./DropdownMain";
 import { DropdownItem } from "./DropdownItem";
+import { useAdjustVerticalOffsetWhenOutsideViewport } from "../../lib";
 
 type CustomDropdownActions =
   | "SelectSecondItem"
@@ -20,13 +21,10 @@ type CustomDropdownActions =
 export const DropdownCustomActions = (props: { options: string[] }) => {
   const { options } = props;
   const itemCount = options.length;
+  const height = 200;
 
   const customReducer = React.useCallback(
-    (
-      state: DropdownState,
-      itemCount: number,
-      action: CustomDropdownActions
-    ) => {
+    (state: DropdownState, itemCount: number, action: CustomDropdownActions) => {
       if (typeof action === "string") {
         if (action === "SelectSecondItem") {
           return {
@@ -55,22 +53,20 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
     customReducer
   );
 
-  const selectedIndex =
-    state.selectedIndexes.length > 0 ? state.selectedIndexes[0] : null;
+  const selectedIndex = state.selectedIndexes.length > 0 ? state.selectedIndexes[0] : null;
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const listRef = React.useRef<HTMLDivElement>(null);
 
   useDropdownCloseWhenClickedOutside(containerRef, dispatch);
   useFocusOnStateChange(listRef, state.isOpen, true);
+  const { top } = useAdjustVerticalOffsetWhenOutsideViewport(containerRef, height);
 
   const listKeyboardHandler = useDropdownListKeyboardNavigator(dispatch);
 
   return (
     <div ref={containerRef} className="dropdown-container">
-      <button onClick={() => dispatch(["SelectSecondItem"])}>
-        Select second item
-      </button>
+      <button onClick={() => dispatch(["SelectSecondItem"])}>Select second item</button>
       <button
         onClick={() =>
           dispatch([
@@ -86,13 +82,12 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
       <DropdownMain
         {...state}
         dispatch={dispatch}
-        itemRenderer={() => (
-          <div>{selectedIndex !== null ? options[selectedIndex] : ""}</div>
-        )}
+        itemRenderer={() => <div>{selectedIndex !== null ? options[selectedIndex] : ""}</div>}
       ></DropdownMain>
       {state.isOpen && (
         <div
           className="dropdown-list"
+          style={{ top }}
           onKeyDown={listKeyboardHandler}
           ref={listRef}
           tabIndex={0}
@@ -101,7 +96,7 @@ export const DropdownCustomActions = (props: { options: string[] }) => {
             itemCount={itemCount}
             itemHeight={25}
             highlightedIndex={state.highlightedIndex}
-            maxHeight={200}
+            maxHeight={height}
             itemRenderer={index => (
               <DropdownItem
                 text={options[index]}

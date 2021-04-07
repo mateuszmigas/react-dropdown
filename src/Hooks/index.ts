@@ -8,3 +8,4 @@ export * from "./useChunkLoader";
 export * from "./useFocusOutHandler";
 export * from "./useDropdownListKeyboardNavigator";
 export * from "./usePreviousValue";
+export * from "./useAdjustVerticalOffsetWhenOutsideViewport";

@@ -1,6 +1,6 @@
 {
   "name": "@mateuszmigas/react-dropdown",
-  "version": "0.9.0",
+  "version": "0.9.3",
   "description": "React dropdown",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -24,7 +24,6 @@
   },
   "homepage": "https://github.com/mateuszmigas/react-dropdown#readme",
   "devDependencies": {
-    "@mateuszmigas/react-union-state": "^1.0.2",
     "@testing-library/react": "^10.4.9",
     "@testing-library/react-hooks": "^3.4.1",
     "@types/jest": "^26.0.10",
@@ -47,6 +46,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@mateuszmigas/react-union-state": "^1.0.2",
     "react-window": "^1.8.5",
     "react-window-infinite-loader": "^1.0.5"
   }
